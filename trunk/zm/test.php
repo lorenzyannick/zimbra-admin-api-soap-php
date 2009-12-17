@@ -1,5 +1,4 @@
 <?php
-//test commit again !
 /////////////
 // Require //
 /////////////
@@ -10,14 +9,15 @@ require_once('ZmDomain.php');
 require_once('ZmServer.php');
 
 //require_once('ZmSoapFault.php');
-require_once ("utils.php");
+require_once("utils.php");
+require_once("config.php");
 
 ////////////
 // Config //
 ////////////
-$zimbraserver = "zmd.1g6.biz";
-$zimbraadminemail = "admin@zmd.1g6.biz";
-$zimbraadminpassword = "IgbDh2GN";
+//$zimbraserver = "zmd.1g6.biz";
+//$zimbraadminemail = "admin@zmd.1g6.biz";
+//$zimbraadminpassword = "IgbDh2GN";
 
 /////////
 // Get //
