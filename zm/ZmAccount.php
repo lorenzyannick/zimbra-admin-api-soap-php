@@ -45,9 +45,7 @@ class ZmAccount
 		else
 			$realType = $type;
 
-                echo "HEEE" . $realType;
-                
-		$result = null;
+                $result = null;
 
 		$params = array(
 			new SoapVar('<domain by="' . $realType . '">' . $domain . '</domain>', XSD_ANYXML)
@@ -134,12 +132,6 @@ class ZmAccount
 		}
 
 		return $result['SOAP:ENVELOPE']['SOAP:BODY']['GETACCOUNTRESPONSE']['ACCOUNT']['ID'];
-
-
-		// En minuscule : pas bon, on a moins d'infos
-		//$ret = makeXMLTree($retour_getAccount);
-		//print_var($ret);
-		//echo $ret['soap:Envelope'][0]['soap:Body'][0]['GetAccountResponse'][0]['account'][0]['id'];
 	}
 
 
@@ -212,9 +204,7 @@ class ZmAccount
 			print_exception($exception);
 		}
 
-		return $res['SOAP:ENVELOPE']['SOAP:BODY']['NEWPASSWORDRESPONSE'];
-
-
+		return $result['SOAP:ENVELOPE']['SOAP:BODY']['SETPASSWORDRESPONSE'];
 
 	}
 
@@ -402,7 +392,7 @@ class ZmAccount
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $name . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
 		);
 
 		try
@@ -417,11 +407,8 @@ class ZmAccount
 			print_exception($exception);
 		}
 
-		$result['SOAP:ENVELOPE']['SOAP:BODY']['GETACCOUNTRESPONSE'];
-
-
-		$aliases = array ();
-		foreach ($result['ACCOUNT']['A'] as $anAlias) {
+                $aliases = array ();
+		foreach ($result['SOAP:ENVELOPE']['SOAP:BODY']['GETACCOUNTRESPONSE']['ACCOUNT']['A'] as $anAlias) {
 			if ($anAlias['N'] == "zimbraMailAlias"){
 				$aliases[] = $anAlias['DATA'];				
 			}

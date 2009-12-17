@@ -8,10 +8,10 @@ require_once('ZmAccount.php');
 require_once('ZmDomain.php');
 require_once('ZmServer.php');
 
-//require_once('ZmSoapFault.php');
 require_once("utils.php");
-require_once("config.php");
 
+
+require_once("config.php");
 ////////////
 // Config //
 ////////////
@@ -145,7 +145,27 @@ $accountManager = new ZmAccount($auth);
 		$array = $accoutManager->removeAccountAlias($nom_compte, "alias_" . $nom_compte);
                 print_var($array, "Remove account alias");
 	}
-	
+
+        // Get account aliases
+        if($action == "gaalias")
+	{
+            $infos = $accountManager->getAccountAliases("e4fb8e19-7d5e-40f1-b168-36a3ce2aa23e");
+            print_var($infos, "Get Account Aliases");
+            if(!$infos)
+                    echo "Erreur : impossible de récupérer les alias du compte :-(\n";
+            else
+                    echo "OK : récupération des alias du compte :-)\n";
+        }
+
+        if($action == "sap")
+        {
+            $infos = $accountManager->setAccountPassword("test_soap_1002912237@zmd.1g6.biz", "newpassword");
+            print_var($infos, "Set Account Password");
+            if(!$infos)
+                    echo "Erreur : impossible de changer le mot de passe :-(\n";
+            else
+                    echo "OK : changement du mot de passe :-)\n";
+        }
 
 
 
