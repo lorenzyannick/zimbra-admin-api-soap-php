@@ -22,7 +22,7 @@ require_once("config.php");
 /////////
 // Get //
 /////////
-if(isset($_GET['nom']) && isset($_GET['newnom']))
+if(isset($_GET['nom']) || isset($_GET['newnom']))
 {
 	$nom_compte = "test_soap_" . $_GET['nom']. "@" . $zimbraserver;
 	$new_nom_compte = "test_soap_" . $_GET['newnom']. "@" . $zimbraserver;
@@ -157,6 +157,7 @@ $accountManager = new ZmAccount($auth);
                     echo "OK : récupération des alias du compte :-)\n";
         }
 
+        // Set Account password
         if($action == "sap")
         {
             $infos = $accountManager->setAccountPassword("test_soap_1002912237@zmd.1g6.biz", "newpassword");
