@@ -5,7 +5,7 @@
 require_once ("utils.php");
 
 /**
- * ZmAuth est une classe qui permet de se connecter à l'espace admin de Zimbra via SOAP
+ * Zm_Auth est une classe qui permet de se connecter à l'espace admin de Zimbra via SOAP
  *
  * Longue description ici, Blablabla ici...
  *
@@ -14,7 +14,7 @@ require_once ("utils.php");
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @package Zimbra
  */
-class ZmAuth
+class Zm_Auth
 {
 	//////////////////////////
 	// Variables de classes //

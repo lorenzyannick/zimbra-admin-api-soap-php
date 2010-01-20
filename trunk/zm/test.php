@@ -2,16 +2,16 @@
 /////////////
 // Require //
 /////////////
-require_once('ZmAuth.php');
+require_once('Zm/Auth.php');
 
-require_once('ZmAccount.php');
-require_once('ZmDomain.php');
-require_once('ZmServer.php');
+require_once('Zm/Account.php');
+require_once('Zm/Domain.php');
+require_once('Zm/Server.php');
 
-require_once("utils.php");
+require_once("Zm/utils.php");
 
 
-require_once("config.php");
+require_once("Zm/config.php");
 ////////////
 // Config //
 ////////////
