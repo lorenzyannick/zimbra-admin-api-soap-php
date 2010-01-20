@@ -5,7 +5,7 @@
 require_once ("utils.php");
 
 /**
- * ZmServer est une classe qui permet de gérer les serveurs Zimbra via SOAP
+ * Zm_Domain est une classe qui permet de gérer les domaines Zimbra via SOAP
  *
  * Longue description ici, Blablabla ici...
  *
@@ -14,17 +14,17 @@ require_once ("utils.php");
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @package Zimbra
  */
-class ZmServer
+class Zm_Domain
 {
 	/*
-         * @var ZmAuth
+         * @var Zm_Auth
          */
 	private $auth;
 
 
 	/**
 	 * Constructeur
-	 * @param ZmAuth $auth authentification soap
+	 * @param Zm_Auth $auth authentification soap
 	 */
 	function __construct($auth)
 	{
@@ -33,17 +33,17 @@ class ZmServer
 
 
 	/**
-	 * getAllServers
+	 * getAllDomains
 	 * @return array informations
 	 */
-	function getAllServers()
+	function getAllDomains()
 	{
 		$result = null;
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"GetAllServersRequest"
+				"GetAllDomainsRequest"
 			);
 		}
 		catch (SoapFault $exception) 
@@ -56,35 +56,30 @@ class ZmServer
 	}
 
 
-	/**
-	 * getServerId
+        /**
+	 * getDomainId
 	 * @param string $name a domain name
-         * @param string $type value of the type (auto, name, id)
 	 * @return string a domain id
 	 */
-	function getServerId($str, $type = "auto") // don't forget serviceHostname
+	function getDomainId($name) // don't forget the "virtualHostname" type
 	{
-                if($type == "auto")
-			$realType = getServerType($str);
-		else
-			$realType = $type;
+		$result = null;
 
-                $result = null;
-                
 		$params = array(
-			new SoapVar('<server by="' . $realType . '">' . $str . '</server>', XSD_ANYXML)
+			new SoapVar('<domain by="name">' . $name . '</domain>', XSD_ANYXML)
 		);
 
 		/*
-		$soapmessage = $this->soapheader . '<GetServerRequest xmlns="urn:zimbraAdmin"';
-		if ($apply != "")
-			$soapmessage .= ' applyConfig="' . $apply . '"';
+		$soapmessage = $this->soapheader . '<GetDomainRequest xmlns="urn:zimbraAdmin"';
+		if ($apply == 0)
+			$soapmessage .= ' applyConfig="0"';
 		*/
+
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"GetServerRequest", 
+				"GetDomainRequest", 
 				$params
 			);
 		}
@@ -93,31 +88,31 @@ class ZmServer
 			print_exception($exception);
 		}
 
-                return $result['SOAP:ENVELOPE']['SOAP:BODY']['GETSERVERRESPONSE']['SERVER']['ID'];
+		return $result['SOAP:ENVELOPE']['SOAP:BODY']['GETDOMAINRESPONSE']['DOMAIN']['ID'];
 	}
 
 
 	/**
-	 * createServer description
-	 * @param string $name a server name
-         * @param array $a an optional array to set server options
-	 * @return array an array with the informations of the created server
+	 * createDomain description
+	 * @param string $name a domain name
+         * @param array $a an optional array to set domain options
+	 * @return array an array with the informations of the created domain
 	 */
-	function createServer($name, $a = array ())
+	function createDomain($name, $a = array())
 	{
 		$result = null;
 
 		$params = array(
 			new SoapParam($name, "name")
 		);
-
+		
 		foreach ($a as $key => $value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"CreateServerRequest", 
+				"CreateDomainRequest", 
 				$params
 			);
 		}
@@ -125,40 +120,40 @@ class ZmServer
 		{
 			print_exception($exception);
 		}
-
-		return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATESERVERRESPONSE']['SERVER'];	
+		
+		return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN'];
+		//return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN']['ID'];
 	}
 
 
 	/**
-	 * deleteServer description
-	 * @param string $idOrNameServer server name or server id
+	 * deleteDomain description
+	 * @param string $idOrNameAccount domain name or domain id
          * @param string $type value of the type (auto, name, id)
 	 * @return array informations
 	 */
-	function deleteServer($idOrNameServer, $type = "auto")
+	function deleteDomain($idOrNameDomain, $type = "auto")
 	{
 		if($type == "auto")
-			$realType = getServerType($idOrNameServer);
+			$realType = getDomainType($idOrNameDomain);
 		else
 			$realType = $type;
 
 		if($realType == "name")
-			$serverId = $this->getServerId($idOrNameServer);
+			$domainId = $this->getDomainId($idOrNameDomain);
 		else
-			$serverId = $idOrNameServer;
-
+			$domainId = $idOrNameDomain;
 
 		$result = null;
 
 		$params = array( 
-			new SoapParam($serverId, "id"), 
+			new SoapParam($domainId, "id"), 
 		);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"DeleteServerRequest", 
+				"DeleteDomainRequest", 
 				$params
 			);
 		}
@@ -167,43 +162,50 @@ class ZmServer
 			print_exception($exception);
 		}
 
-		return $result; 
+		return $result;
 	}
 
 
 	/**
-         * modifyServer description
-         * @param string $idOrNameServer server name or server id
-         * @param array $a an optional array to set server options
+         * modifyDomain
+         * @param string $idOrNameDomain domain name or domain id
+         * @param string $newName new account name
          * @param string $type value of the type (auto, name, id)
-         * @return array informations
+         * @return array
          */
-	function modifyServer($idOrNameServer, $a = array(), $type = "auto")
+	function modifyDomain($idOrNameDomain, $a = array(), $type = "auto")
 	{
 		if($type == "auto")
-			$realType = getServerType($idOrNameServer);
+			$realType = getDomainType($idOrNameDomain);
 		else
 			$realType = $type;
 
 		if($realType == "name")
-			$serverId = $this->getServerId($idOrNameServer);
+			$domainId = $this->getDomainId($idOrNameDomain);
 		else
-			$serverId = $idOrNameServer;
-
+			$domainId = $idOrNameDomain;
 
 		$result = null;
 
 		$params = array( 
-			new SoapParam($serverId, "id")
+			new SoapParam($domainId, "id")
 		);
-		
+
 		foreach ($a as $key => $value)
+		{
+			/*
+			if($value['N'] == "zimbraId" || $value['N'] == "zimbraDomainName")
+				echo '';
+			else if($value['N'] == "o")
+				$params[] = new SoapVar('<a n="' . $value['N'] . '">NNN' . $value['DATA'] . '</a>', XSD_ANYXML);
+			else
+			*/
 			$params[] = new SoapVar('<a n="' . $value['N'] . '">' . $value['DATA'] . '</a>', XSD_ANYXML);
-		
+		}
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"ModifyServerRequest", 
+				"ModifyDomainRequest", 
 				$params
 			);
 		}

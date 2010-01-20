@@ -5,7 +5,7 @@
 require_once ("utils.php");
 
 /**
- * ZmAccount est une classe qui permet de gérer les comptes Zimbra via SOAP
+ * Zm_Account est une classe qui permet de gérer les comptes Zimbra via SOAP
  *
  * Longue description ici, Blablabla ici...
  *
@@ -14,10 +14,10 @@ require_once ("utils.php");
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @package Zimbra
  */
-class ZmAccount
+class Zm_Account
 {
 	/*
-         * @var ZmAuth
+         * @var Zm_Auth
          */
 	private $auth;
 
