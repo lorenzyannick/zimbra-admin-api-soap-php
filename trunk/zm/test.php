@@ -58,7 +58,7 @@ else
 ///////////
 // Login //
 ///////////
-$auth = new ZmAuth($zimbraserver, $zimbraadminemail, $zimbraadminpassword);
+$auth = new Zm_Auth($zimbraserver, $zimbraadminemail, $zimbraadminpassword);
 $auth->login();
 
 
@@ -66,7 +66,7 @@ $auth->login();
 /////////////
 // Account //
 /////////////
-$accountManager = new ZmAccount($auth);
+$accountManager = new Zm_Account($auth);
 
 	// Get Account Informations
 	if($action == "gai")
@@ -176,7 +176,7 @@ $accountManager = new ZmAccount($auth);
 ////////////
 // Domain //
 ////////////
-$domainManager = new ZmDomain($auth);
+$domainManager = new Zm_Domain($auth);
 
 
 	// Get All Domains
@@ -232,7 +232,7 @@ $domainManager = new ZmDomain($auth);
 ////////////
 // Server //
 ////////////
-$serverManager = new ZmServer($auth);
+$serverManager = new Zm_Server($auth);
 
 	// Get All Server
 	if($action == "gs")
