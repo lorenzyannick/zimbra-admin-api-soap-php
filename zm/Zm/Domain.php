@@ -1,30 +1,35 @@
 <?php
+
 /**
- * utils.php contient une petite collection de fonction utiles
+ * Zm_Domain
+ *
+ * @author Yannick Lorenz <ylorenz@1g6.biz>
+ * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
+ * @version 2.0
+ * @copyright Copyright (c) 2009, Yannick Lorenz
+ * @copyright Copyright (c) 2012, Fabrizio La Rosa
+ * @package ZimbraSoapPhp
  */
+
+// utils.php contains a small collection of useful functions
 require_once ("utils.php");
 
 /**
- * Zm_Domain est une classe qui permet de gérer les domaines Zimbra via SOAP
+ * Zm_Domain is a class which allows to manage Zimbra domains via SOAP
  *
- * Longue description ici, Blablabla ici...
- *
- * @author Yannick Lorenz <ylorenz@1g6.biz>
- * @version 1.0
- * @copyright Copyright (c) 2009, Yannick Lorenz
- * @package Zimbra
+ * You may create, modify, rename, delete and get the attributes of a Zimbra domain using this class
  */
 class Zm_Domain
 {
-	/*
-         * @var Zm_Auth
-         */
+	/**
+	 * $auth
+	 * @var Zm_Auth $auth soap authentication
+	 */
 	private $auth;
 
-
 	/**
-	 * Constructeur
-	 * @param Zm_Auth $auth authentification soap
+	 * Constructor
+	 * @param Zm_Auth $auth soap authentication
 	 */
 	function __construct($auth)
 	{
@@ -46,17 +51,15 @@ class Zm_Domain
 				"GetAllDomainsRequest"
 			);
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
 
 		return $result;
-
 	}
 
-
-        /**
+    /**
 	 * getDomainId
 	 * @param string $name a domain name
 	 * @return string a domain id
@@ -69,111 +72,127 @@ class Zm_Domain
 			new SoapVar('<domain by="name">' . $name . '</domain>', XSD_ANYXML)
 		);
 
-		/*
-		$soapmessage = $this->soapheader . '<GetDomainRequest xmlns="urn:zimbraAdmin"';
-		if ($apply == 0)
-			$soapmessage .= ' applyConfig="0"';
-		*/
+		try
+		{
+			$result = $this->auth->execSoapCall(
+				"GetDomainInfoRequest",
+				$params
+			);
 
+			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['GETDOMAININFORESPONSE']['DOMAIN']['ID'];
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
+
+    /**
+	 * domainExists
+	 * @param string $idOrNameDomain domain id or domain name
+	 * @param string $type value of the domain (auto, name, id)
+	 * @return bool exists
+	 */
+	function domainExists($idOrNameDomain, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getDomainType($idOrNameDomain);
+		else
+			$realType = $type;
+
+		if($realType == "name")
+			$domainId = $this->getDomainId($idOrNameDomain);
+		else
+			$domainId = $idOrNameDomain;
+
+		$result = $this->getDomainId($domainId);
+
+		return (!stristr($result, "dummy"));
+	}
+
+    /**
+	 * getDomainOptions
+	 * @param string $idOrNameDomain domain id or domain name
+	 * @param string $type value of the domain (auto, name, id)
+	 * @return array
+	 */
+	function getDomainOptions($idOrNameDomain, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getDomainType($idOrNameDomain);
+		else
+			$realType = $type;
+
+		$result = null;
+
+		$params = array(
+			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML)
+		);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"GetDomainRequest", 
+				"GetDomainRequest",
 				$params
 			);
+
+			$attrs = array();
+			foreach ($result['SOAP:ENVELOPE']['SOAP:BODY']['GETDOMAINRESPONSE']['DOMAIN']['A'] as $a) {
+				$attrs[$a['N']] = $a['DATA'];
+			}
+			$result = $attrs;
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
 
-		return $result['SOAP:ENVELOPE']['SOAP:BODY']['GETDOMAINRESPONSE']['DOMAIN']['ID'];
+		return $result;
 	}
 
-
 	/**
-	 * createDomain description
+	 * createDomain
 	 * @param string $name a domain name
-         * @param array $a an optional array to set domain options
+	 * @param array $attrs an optional array to set domain options
 	 * @return array an array with the informations of the created domain
 	 */
-	function createDomain($name, $a = array())
+	function createDomain($name, $attrs = array())
 	{
 		$result = null;
 
 		$params = array(
 			new SoapParam($name, "name")
 		);
-		
-		foreach ($a as $key => $value)
+		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"CreateDomainRequest", 
+				"CreateDomainRequest",
 				$params
 			);
-		}
-		catch (SoapFault $exception) 
-		{
-			print_exception($exception);
-		}
-		
-		return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN'];
-		//return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN']['ID'];
-	}
 
-
-	/**
-	 * deleteDomain description
-	 * @param string $idOrNameAccount domain name or domain id
-         * @param string $type value of the type (auto, name, id)
-	 * @return array informations
-	 */
-	function deleteDomain($idOrNameDomain, $type = "auto")
-	{
-		if($type == "auto")
-			$realType = getDomainType($idOrNameDomain);
-		else
-			$realType = $type;
-
-		if($realType == "name")
-			$domainId = $this->getDomainId($idOrNameDomain);
-		else
-			$domainId = $idOrNameDomain;
-
-		$result = null;
-
-		$params = array( 
-			new SoapParam($domainId, "id"), 
-		);
-
-		try
-		{
-			$result = $this->auth->execSoapCall(
-				"DeleteDomainRequest", 
-				$params
-			);
+			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN'];
 		}
 		catch (SoapFault $exception)
-		{         
-			print_exception($exception);
+		{
+			$result = $exception;
 		}
 
 		return $result;
 	}
 
-
 	/**
-         * modifyDomain
-         * @param string $idOrNameDomain domain name or domain id
-         * @param string $newName new account name
-         * @param string $type value of the type (auto, name, id)
-         * @return array
-         */
-	function modifyDomain($idOrNameDomain, $a = array(), $type = "auto")
+	 * modifyDomain
+	 * @param string $idOrNameDomain domain id or domain name
+	 * @param array $attrs an array to set domain options
+	 * @param string $type value of the domain (auto, name, id)
+	 * @return array
+	 */
+	function modifyDomain($idOrNameDomain, $attrs = array(), $type="auto")
 	{
 		if($type == "auto")
 			$realType = getDomainType($idOrNameDomain);
@@ -187,36 +206,65 @@ class Zm_Domain
 
 		$result = null;
 
-		$params = array( 
+		$params = array(
 			new SoapParam($domainId, "id")
 		);
+		foreach ($attrs as $key=>$value)
+			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
 
-		foreach ($a as $key => $value)
-		{
-			/*
-			if($value['N'] == "zimbraId" || $value['N'] == "zimbraDomainName")
-				echo '';
-			else if($value['N'] == "o")
-				$params[] = new SoapVar('<a n="' . $value['N'] . '">NNN' . $value['DATA'] . '</a>', XSD_ANYXML);
-			else
-			*/
-			$params[] = new SoapVar('<a n="' . $value['N'] . '">' . $value['DATA'] . '</a>', XSD_ANYXML);
-		}
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"ModifyDomainRequest", 
+				"ModifyDomainRequest",
 				$params
 			);
 		}
 		catch (SoapFault $exception)
-		{         
-			print_exception($exception);
+		{
+			$result = $exception;
 		}
 
-		return $result; 
+		return $result;
 	}
 
+	/**
+	 * deleteDomain
+	 * @param string $idOrNameDomain domain id or domain name
+     * @param string $type value of the domain (auto, name, id)
+	 * @return array informations
+	 */
+	function deleteDomain($idOrNameDomain, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getDomainType($idOrNameDomain);
+		else
+			$realType = $type;
+
+		if($realType == "name")
+			$domainId = $this->getDomainId($idOrNameDomain);
+		else
+			$domainId = $idOrNameDomain;
+
+		$result = null;
+
+		$params = array(
+			new SoapParam($domainId, "id"),
+		);
+
+		try
+		{
+			$result = $this->auth->execSoapCall(
+				"DeleteDomainRequest",
+				$params
+			);
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
 }
 
 ?>

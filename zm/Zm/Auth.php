@@ -1,67 +1,50 @@
 <?php
+
 /**
- * utils.php contient une petite collection de fonction utiles
+ * Zm_Auth
+ *
+ * @author Yannick Lorenz <ylorenz@1g6.biz>
+ * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
+ * @version 2.0
+ * @copyright Copyright (c) 2009, Yannick Lorenz
+ * @copyright Copyright (c) 2012, Fabrizio La Rosa
+ * @package ZimbraSoapPhp
  */
+
+// utils.php contains a small collection of useful functions
 require_once ("utils.php");
 
 /**
- * Zm_Auth est une classe qui permet de se connecter à l'espace admin de Zimbra via SOAP
+ * Zm_Auth is a class which allows to connect to the Zimbra admin space via SOAP
  *
- * Longue description ici, Blablabla ici...
+ * Use this class to connect and login to a Zimbra server
  *
- * @author Yannick Lorenz <ylorenz@1g6.biz>
- * @version 1.0
- * @copyright Copyright (c) 2009, Yannick Lorenz
- * @package Zimbra
+ * Example:
+ * <code>
+ * $auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword);
+ * $l = $auth->login();
+ * if(is_a($l, "Exception")) {
+ *     echo "Error : cannot login to $zimbraServer\n";
+ *     echo $l->getMessage()."\n";
+ *     exit();
+ * }
+ * </code>
  */
 class Zm_Auth
 {
-	//////////////////////////
-	// Variables de classes //
-	//////////////////////////
+	/////////////////////
+	// Class Variables //
+	/////////////////////
 	private $client;
 	private $soapHeader;
 	private $params;
 	private $authToken;
 
-	function execSoapCall($request, $params = array(), $options = null)
-	{
-		$soapHeader = $this->getSoapHeader();
-
-		$result = null;
-		try
-		{
-			$this->client->__soapCall(
-					$request, 
-					$params, 
-					$options,
-					$soapHeader
-			);
-			$result = $this->client->__getLastResponse();
-			//$this->auth->setSoapHeader($result['authToken']);
-		}
-		catch (SoapFault $exception) 
-		{
-			print_exception($exception);
-		}
-
-                
-                $xml = new xml2Array();
-		$res = $xml->parse($result);
-
-		//echo htmlentities($result);
-		//A tester : $this->objLastResponse = simplexml_load_string($this->_getBodyContent($this->objLastResponseRaw));
-
-
-		return $res;
-              
-	}
-
 	/**
-	 * Constructeur
-	 * @param string $server nom du serveur (exemple : zmd.1g6.biz)
-         * @param string $username login du compte admin
-         * @param string $password mot de passe du compte admin
+	 * Constructor
+	 * @param string $server server name (example: zimbra.yourdomain.com)
+	 * @param string $username admin account's username
+	 * @param string $password admin account's password
 	 */
 	function __construct($server, $username, $password)
 	{
@@ -81,9 +64,40 @@ class Zm_Auth
 					new SoapParam($username, "name"),
 					new SoapParam($password, "password")
 		);
-
 	}
 
+
+	function execSoapCall($request, $params = array(), $options = null)
+	{
+		$result = null;
+		$soapHeader = $this->getSoapHeader();
+
+		try
+		{
+			$soapRes = null;
+			$this->client->__soapCall(
+					$request,
+					$params,
+					$options,
+					$soapHeader
+			);
+			$soapRes = $this->client->__getLastResponse();
+			//$this->auth->setSoapHeader($soapRes['authToken']);
+
+			$xml = new xml2Array();
+			$result = $xml->parse($soapRes);
+
+			//echo htmlentities($result);
+			//A tester : $this->objLastResponse = simplexml_load_string($this->_getBodyContent($this->objLastResponseRaw));
+		}
+		catch (SoapFault $exception)
+		{
+			// we must re-throw the exception here because this method is only called by the Zm_Account, Zm_Domain, Zm_Server class methods
+			throw($exception);
+		}
+
+		return $result;
+	}
 
 	function getSoapHeader()
 	{
@@ -106,7 +120,6 @@ class Zm_Auth
 				)
 			);
 		}
-
 	}
 
 	function getClient()
@@ -114,31 +127,31 @@ class Zm_Auth
 		return $this->client;
 	}
 
-
+	/**
+	 * Use this method to login to a Zimbra server after you create an instance of this class
+	 */
 	function login()
 	{
 		$result = null;
-		
-		try 
+
+		try
 		{
 			$this->setSoapHeader();
-			
+
 			$result = $this->client->__soapCall("AuthRequest", $this->params, null, $this->getSoapHeader());
 			//$result = $this->client->__getLastResponse();
 			//print_var($result);
-			
+
 			// Save the soapHeader with token
 			$this->setSoapHeader($result['authToken']);
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
-		
+
 		return $result;
 	}
-    
-} 
-
+}
 
 ?>

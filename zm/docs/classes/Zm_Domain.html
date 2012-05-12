@@ -1,0 +1,227 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>phpDocumentor » \Zm_Domain</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">phpDocumentor</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu"></ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">8</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#createDomain" title="createDomain :: createDomain"><span class="description">createDomain</span><pre>createDomain()</pre></a></li>
+<li class="method public "><a href="#deleteDomain" title="deleteDomain :: deleteDomain"><span class="description">deleteDomain</span><pre>deleteDomain()</pre></a></li>
+<li class="method public "><a href="#domainExists" title="domainExists :: domainExists"><span class="description">domainExists</span><pre>domainExists()</pre></a></li>
+<li class="method public "><a href="#getAllDomains" title="getAllDomains :: getAllDomains"><span class="description">getAllDomains</span><pre>getAllDomains()</pre></a></li>
+<li class="method public "><a href="#getDomainId" title="getDomainId :: getDomainId"><span class="description">getDomainId</span><pre>getDomainId()</pre></a></li>
+<li class="method public "><a href="#getDomainOptions" title="getDomainOptions :: getDomainOptions"><span class="description">getDomainOptions</span><pre>getDomainOptions()</pre></a></li>
+<li class="method public "><a href="#modifyDomain" title="modifyDomain :: modifyDomain"><span class="description">modifyDomain</span><pre>modifyDomain()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header private">» Private</li>
+<li class="property private "><a href="#%24auth" title="$auth :: $auth"><span class="description">$auth</span><pre>$auth</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CZm_Domain" id="\Zm_Domain"></a><div href="../classes/Zm_Domain.html" class="element class">
+<p class="short_description">Zm_Domain is a class which allows to manage Zimbra domains via SOAP</p>
+<div class="details">
+<p class="long_description"><p>You may create, modify, rename, delete and get the attributes of a Zimbra domain using this class</p></p>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(<a href="../classes/Zm_Auth.html">\Zm_Auth</a> $auth) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$auth</h4>
+<code><a href="../classes/Zm_Auth.html">\Zm_Auth</a></code><p>soap authentication</p></div>
+</div></div>
+</div>
+<a name="createDomain" id="createDomain"></a><div class="element clickable method public createDomain" data-toggle="collapse" data-target=".createDomain .collapse">
+<h2>createDomain</h2>
+<pre>createDomain(string $name, array $attrs) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>a domain name</p></div>
+<div class="subelement argument">
+<h4>$attrs</h4>
+<code>array</code><p>an optional array to set domain options</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>an array with the informations of the created domain</div>
+</div></div>
+</div>
+<a name="deleteDomain" id="deleteDomain"></a><div class="element clickable method public deleteDomain" data-toggle="collapse" data-target=".deleteDomain .collapse">
+<h2>deleteDomain</h2>
+<pre>deleteDomain(string $idOrNameDomain, string $type) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$idOrNameDomain</h4>
+<code>string</code><p>domain id or domain name</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>value of the domain (auto, name, id)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>informations</div>
+</div></div>
+</div>
+<a name="domainExists" id="domainExists"></a><div class="element clickable method public domainExists" data-toggle="collapse" data-target=".domainExists .collapse">
+<h2>domainExists</h2>
+<pre>domainExists(string $idOrNameDomain, string $type) : bool</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$idOrNameDomain</h4>
+<code>string</code><p>domain id or domain name</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>value of the domain (auto, name, id)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>bool</code>exists</div>
+</div></div>
+</div>
+<a name="getAllDomains" id="getAllDomains"></a><div class="element clickable method public getAllDomains" data-toggle="collapse" data-target=".getAllDomains .collapse">
+<h2>getAllDomains</h2>
+<pre>getAllDomains() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>informations</div>
+</div></div>
+</div>
+<a name="getDomainId" id="getDomainId"></a><div class="element clickable method public getDomainId" data-toggle="collapse" data-target=".getDomainId .collapse">
+<h2>getDomainId</h2>
+<pre>getDomainId(string $name) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>a domain name</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>a domain id</div>
+</div></div>
+</div>
+<a name="getDomainOptions" id="getDomainOptions"></a><div class="element clickable method public getDomainOptions" data-toggle="collapse" data-target=".getDomainOptions .collapse">
+<h2>getDomainOptions</h2>
+<pre>getDomainOptions(string $idOrNameDomain, string $type) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$idOrNameDomain</h4>
+<code>string</code><p>domain id or domain name</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>value of the domain (auto, name, id)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="modifyDomain" id="modifyDomain"></a><div class="element clickable method public modifyDomain" data-toggle="collapse" data-target=".modifyDomain .collapse">
+<h2>modifyDomain</h2>
+<pre>modifyDomain(string $idOrNameDomain, array $attrs, string $type) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$idOrNameDomain</h4>
+<code>string</code><p>domain id or domain name</p></div>
+<div class="subelement argument">
+<h4>$attrs</h4>
+<code>array</code><p>an array to set domain options</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>value of the domain (auto, name, id)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24auth" id="$auth"> </a><div class="element clickable property private $auth" data-toggle="collapse" data-target=".$auth .collapse">
+<h2>$auth</h2>
+<pre>$auth : <a href="../classes/Zm_Auth.html">\Zm_Auth</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a2</a> and<br>
+            generated on 2012-05-11T15:16:17+02:00.<br></footer></div>
+</div>
+</body>
+</html>

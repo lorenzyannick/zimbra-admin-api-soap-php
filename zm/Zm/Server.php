@@ -1,30 +1,35 @@
 <?php
+
 /**
- * utils.php contient une petite collection de fonction utiles
+ * Zm_Server
+ *
+ * @author Yannick Lorenz <ylorenz@1g6.biz>
+ * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
+ * @version 2.0
+ * @copyright Copyright (c) 2009, Yannick Lorenz
+ * @copyright Copyright (c) 2012, Fabrizio La Rosa
+ * @package ZimbraSoapPhp
  */
+
+// utils.php contains a small collection of useful functions
 require_once ("utils.php");
 
 /**
- * Zm_Server est une classe qui permet de gérer les serveurs Zimbra via SOAP
+ * Zm_Server is a class which allows to manage Zimbra servers via SOAP
  *
- * Longue description ici, Blablabla ici...
- *
- * @author Yannick Lorenz <ylorenz@1g6.biz>
- * @version 1.0
- * @copyright Copyright (c) 2009, Yannick Lorenz
- * @package Zimbra
+ * You may create, modify, rename, delete and get the attributes of a Zimbra server using this class
  */
 class Zm_Server
 {
-	/*
-         * @var Zm_Auth
-         */
+	/**
+	 * $auth
+	 * @var Zm_Auth $auth soap authentication
+	 */
 	private $auth;
 
-
 	/**
-	 * Constructeur
-	 * @param Zm_Auth $auth authentification soap
+	 * Constructor
+	 * @param Zm_Auth $auth soap authentication
 	 */
 	function __construct($auth)
 	{
@@ -46,97 +51,159 @@ class Zm_Server
 				"GetAllServersRequest"
 			);
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
 
 		return $result;
-
 	}
-
 
 	/**
 	 * getServerId
-	 * @param string $name a domain name
-         * @param string $type value of the type (auto, name, id)
-	 * @return string a domain id
+	 * @param string $name a server name
+	 * @return string a server id
 	 */
-	function getServerId($str, $type = "auto") // don't forget serviceHostname
+	function getServerId($name)
 	{
-                if($type == "auto")
-			$realType = getServerType($str);
-		else
-			$realType = $type;
+        $result = null;
 
-                $result = null;
-                
 		$params = array(
-			new SoapVar('<server by="' . $realType . '">' . $str . '</server>', XSD_ANYXML)
+			new SoapVar('<server by="name">' . $name . '</server>', XSD_ANYXML)
 		);
-
-		/*
-		$soapmessage = $this->soapheader . '<GetServerRequest xmlns="urn:zimbraAdmin"';
-		if ($apply != "")
-			$soapmessage .= ' applyConfig="' . $apply . '"';
-		*/
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"GetServerRequest", 
+				"GetServerRequest",
+				$params
+			);
+
+			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['GETSERVERRESPONSE']['SERVER']['ID'];
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
+
+    /**
+	 * serverExists
+	 * @param string $idOrNameServer server id or server name
+	 * @param string $type value of the server (auto, name, id)
+	 * @return bool exists
+	 */
+	function serverExists($idOrNameServer, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getServerType($idOrNameServer);
+		else
+			$realType = $type;
+
+		$result = null;
+
+		$params = array(
+			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML)
+		);
+
+		try
+		{
+			$result = $this->auth->execSoapCall(
+				"GetServerRequest",
 				$params
 			);
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
 
-                return $result['SOAP:ENVELOPE']['SOAP:BODY']['GETSERVERRESPONSE']['SERVER']['ID'];
+		return (!is_a($result, "Exception"));
 	}
 
+    /**
+	 * getServerOptions
+	 * @param string $idOrNameServer server id or server name
+	 * @param string $type value of the server (auto, name, id)
+	 * @return array
+	 */
+	function getServerOptions($idOrNameServer, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getServerType($idOrNameServer);
+		else
+			$realType = $type;
+
+		$result = null;
+
+		$params = array(
+			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML)
+		);
+
+		try
+		{
+			$result = $this->auth->execSoapCall(
+				"GetServerRequest",
+				$params
+			);
+
+			$attrs = array();
+			foreach ($result['SOAP:ENVELOPE']['SOAP:BODY']['GETSERVERRESPONSE']['SERVER']['A'] as $a) {
+				$attrs[$a['N']] = $a['DATA'];
+			}
+			$result = $attrs;
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
 
 	/**
-	 * createServer description
+	 * createServer
 	 * @param string $name a server name
-         * @param array $a an optional array to set server options
+     * @param array $attrs an optional array to set server options
 	 * @return array an array with the informations of the created server
 	 */
-	function createServer($name, $a = array ())
+	function createServer($name, $attrs = array ())
 	{
 		$result = null;
 
 		$params = array(
 			new SoapParam($name, "name")
 		);
-
-		foreach ($a as $key => $value)
+		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"CreateServerRequest", 
+				"CreateServerRequest",
 				$params
 			);
+
+			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATESERVERRESPONSE']['SERVER'];
 		}
-		catch (SoapFault $exception) 
+		catch (SoapFault $exception)
 		{
-			print_exception($exception);
+			$result = $exception;
 		}
 
-		return $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATESERVERRESPONSE']['SERVER'];	
+		return $result;
 	}
 
-
 	/**
-	 * deleteServer description
-	 * @param string $idOrNameServer server name or server id
-         * @param string $type value of the type (auto, name, id)
+	 * modifyServer
+	 * @param string $idOrNameServer server id or server name
+	 * @param array $attrs an array to set server options
+	 * @param string $type value of the server (auto, name, id)
 	 * @return array informations
 	 */
-	function deleteServer($idOrNameServer, $type = "auto")
+	function modifyServer($idOrNameServer, $attrs = array(), $type="auto")
 	{
 		if($type == "auto")
 			$realType = getServerType($idOrNameServer);
@@ -148,73 +215,67 @@ class Zm_Server
 		else
 			$serverId = $idOrNameServer;
 
-
 		$result = null;
 
-		$params = array( 
-			new SoapParam($serverId, "id"), 
-		);
-
-		try
-		{
-			$result = $this->auth->execSoapCall(
-				"DeleteServerRequest", 
-				$params
-			);
-		}
-		catch (SoapFault $exception)
-		{         
-			print_exception($exception);
-		}
-
-		return $result; 
-	}
-
-
-	/**
-         * modifyServer description
-         * @param string $idOrNameServer server name or server id
-         * @param array $a an optional array to set server options
-         * @param string $type value of the type (auto, name, id)
-         * @return array informations
-         */
-	function modifyServer($idOrNameServer, $a = array(), $type = "auto")
-	{
-		if($type == "auto")
-			$realType = getServerType($idOrNameServer);
-		else
-			$realType = $type;
-
-		if($realType == "name")
-			$serverId = $this->getServerId($idOrNameServer);
-		else
-			$serverId = $idOrNameServer;
-
-
-		$result = null;
-
-		$params = array( 
+		$params = array(
 			new SoapParam($serverId, "id")
 		);
-		
-		foreach ($a as $key => $value)
-			$params[] = new SoapVar('<a n="' . $value['N'] . '">' . $value['DATA'] . '</a>', XSD_ANYXML);
-		
+		foreach ($attrs as $key=>$value)
+			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
+
 		try
 		{
 			$result = $this->auth->execSoapCall(
-				"ModifyServerRequest", 
+				"ModifyServerRequest",
 				$params
 			);
 		}
 		catch (SoapFault $exception)
-		{         
-			print_exception($exception);
+		{
+			$result = $exception;
 		}
 
-		return $result; 
+		return $result;
 	}
 
+	/**
+	 * deleteServer
+	 * @param string $idOrNameServer server id or server name
+     * @param string $type value of the server (auto, name, id)
+	 * @return array informations
+	 */
+	function deleteServer($idOrNameServer, $type="auto")
+	{
+		if($type == "auto")
+			$realType = getServerType($idOrNameServer);
+		else
+			$realType = $type;
+
+		if($realType == "name")
+			$serverId = $this->getServerId($idOrNameServer);
+		else
+			$serverId = $idOrNameServer;
+
+		$result = null;
+
+		$params = array(
+			new SoapParam($serverId, "id"),
+		);
+
+		try
+		{
+			$result = $this->auth->execSoapCall(
+				"DeleteServerRequest",
+				$params
+			);
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
 }
 
 ?>

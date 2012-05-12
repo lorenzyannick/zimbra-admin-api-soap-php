@@ -1,6 +1,8 @@
 #! /bin/bash
-# Script for generatig php documentation from NetBeans through run configuration
-echo "Début de la génération de la documentation..."
-phpdoc -c $2
-echo "Génération de la doc PHP terminée le `date`."
-firefox $3/index.html
+# Script for generatig php documentation
+
+DOCDIR=docs/
+PKGDIR=Zm/
+
+[ -d $DOCDIR ] && rm -r $DOCDIR
+phpdoc --defaultpackagename ZimbraSoapPhp -i *test*.php,utils.php -d $PKGDIR -t $DOCDIR
