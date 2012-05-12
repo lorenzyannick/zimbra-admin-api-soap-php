@@ -59,7 +59,7 @@ class Zm_Domain
 		return $result;
 	}
 
-    /**
+	/**
 	 * getDomainId
 	 * @param string $name a domain name
 	 * @return string a domain id
@@ -89,7 +89,7 @@ class Zm_Domain
 		return $result;
 	}
 
-    /**
+	/**
 	 * domainExists
 	 * @param string $idOrNameDomain domain id or domain name
 	 * @param string $type value of the domain (auto, name, id)
@@ -112,7 +112,7 @@ class Zm_Domain
 		return (!stristr($result, "dummy"));
 	}
 
-    /**
+	/**
 	 * getDomainOptions
 	 * @param string $idOrNameDomain domain id or domain name
 	 * @param string $type value of the domain (auto, name, id)
@@ -230,7 +230,7 @@ class Zm_Domain
 	/**
 	 * deleteDomain
 	 * @param string $idOrNameDomain domain id or domain name
-     * @param string $type value of the domain (auto, name, id)
+	 * @param string $type value of the domain (auto, name, id)
 	 * @return array informations
 	 */
 	function deleteDomain($idOrNameDomain, $type="auto")
