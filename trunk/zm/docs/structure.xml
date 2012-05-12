@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a2" title="">
+  <file path="Domain.php" hash="d719dbcfe195c933569a6c9150e0eaee" package="ZimbraSoapPhp">
+    <docblock line="3">
+      <description><![CDATA[Zm_Domain]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+      <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+      <tag line="3" name="version" description="2.0"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+      <tag line="3" name="package" description="ZimbraSoapPhp"/>
+    </docblock>
+    <include line="15" type="Require Once" package="ZimbraSoapPhp">
+      <name>utils.php</name>
+      <docblock line="3">
+        <description><![CDATA[Zm_Domain]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+        <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+        <tag line="3" name="version" description="2.0"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+        <tag line="3" name="package" description="ZimbraSoapPhp"/>
+      </docblock>
+    </include>
+    <class final="false" abstract="false" namespace="default" line="22" package="ZimbraSoapPhp">
+      <name>Zm_Domain</name>
+      <full_name>\Zm_Domain</full_name>
+      <extends/>
+      <docblock line="17">
+        <description><![CDATA[Zm_Domain is a class which allows to manage Zimbra domains via SOAP]]></description>
+        <long-description><![CDATA[<p>You may create, modify, rename, delete and get the attributes of a Zimbra domain using this class</p>]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="28" package="ZimbraSoapPhp">
+        <name>$auth</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[$auth]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="soap authentication" type="\Zm_Auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="34" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="30">
+          <description><![CDATA[Constructor]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="param" description="soap authentication" type="\Zm_Auth" variable="$auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+        <argument line="34">
+          <name>$auth</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="44" package="">
+        <name>getAllDomains</name>
+        <type>function</type>
+        <docblock line="40">
+          <description><![CDATA[getAllDomains]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="40" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="67" package="">
+        <name>getDomainId</name>
+        <type>function</type>
+        <docblock line="62">
+          <description><![CDATA[getDomainId]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="62" name="param" description="a domain name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="62" name="return" description="a domain id" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="67">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="98" package="">
+        <name>domainExists</name>
+        <type>function</type>
+        <docblock line="92">
+          <description><![CDATA[domainExists]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="92" name="param" description="domain id or domain name" type="string" variable="$idOrNameDomain">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="92" name="param" description="value of the domain (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="92" name="return" description="exists" type="bool">
+            <type by_reference="false">bool</type>
+          </tag>
+        </docblock>
+        <argument line="98">
+          <name>$idOrNameDomain</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="98">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="121" package="">
+        <name>getDomainOptions</name>
+        <type>function</type>
+        <docblock line="115">
+          <description><![CDATA[getDomainOptions]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="115" name="param" description="domain id or domain name" type="string" variable="$idOrNameDomain">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="115" name="param" description="value of the domain (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="115" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="121">
+          <name>$idOrNameDomain</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="121">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="161" package="">
+        <name>createDomain</name>
+        <type>function</type>
+        <docblock line="155">
+          <description><![CDATA[createDomain]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="155" name="param" description="a domain name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="155" name="param" description="an optional array to set domain options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="155" name="return" description="an array with the informations of the created domain" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="161">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="161">
+          <name>$attrs</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="195" package="">
+        <name>modifyDomain</name>
+        <type>function</type>
+        <docblock line="188">
+          <description><![CDATA[modifyDomain]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="188" name="param" description="domain id or domain name" type="string" variable="$idOrNameDomain">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="188" name="param" description="an array to set domain options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="188" name="param" description="value of the domain (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="188" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="195">
+          <name>$idOrNameDomain</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="195">
+          <name>$attrs</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="195">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="236" package="">
+        <name>deleteDomain</name>
+        <type>function</type>
+        <docblock line="230">
+          <description><![CDATA[deleteDomain]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="230" name="param" description="domain id or domain name" type="string" variable="$idOrNameDomain">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="230" name="param" description="value of the domain (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="230" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="236">
+          <name>$idOrNameDomain</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="236">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Server.php" hash="ce77be9be19509fe3ad43a492903e74b" package="ZimbraSoapPhp">
+    <docblock line="3">
+      <description><![CDATA[Zm_Server]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+      <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+      <tag line="3" name="version" description="2.0"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+      <tag line="3" name="package" description="ZimbraSoapPhp"/>
+    </docblock>
+    <include line="15" type="Require Once" package="ZimbraSoapPhp">
+      <name>utils.php</name>
+      <docblock line="3">
+        <description><![CDATA[Zm_Server]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+        <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+        <tag line="3" name="version" description="2.0"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+        <tag line="3" name="package" description="ZimbraSoapPhp"/>
+      </docblock>
+    </include>
+    <class final="false" abstract="false" namespace="default" line="22" package="ZimbraSoapPhp">
+      <name>Zm_Server</name>
+      <full_name>\Zm_Server</full_name>
+      <extends/>
+      <docblock line="17">
+        <description><![CDATA[Zm_Server is a class which allows to manage Zimbra servers via SOAP]]></description>
+        <long-description><![CDATA[<p>You may create, modify, rename, delete and get the attributes of a Zimbra server using this class</p>]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="28" package="ZimbraSoapPhp">
+        <name>$auth</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[$auth]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="soap authentication" type="\Zm_Auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="34" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="30">
+          <description><![CDATA[Constructor]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="param" description="soap authentication" type="\Zm_Auth" variable="$auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+        <argument line="34">
+          <name>$auth</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="44" package="">
+        <name>getAllServers</name>
+        <type>function</type>
+        <docblock line="40">
+          <description><![CDATA[getAllServers]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="40" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="67" package="">
+        <name>getServerId</name>
+        <type>function</type>
+        <docblock line="62">
+          <description><![CDATA[getServerId]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="62" name="param" description="a server name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="62" name="return" description="a server id" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="67">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="98" package="">
+        <name>serverExists</name>
+        <type>function</type>
+        <docblock line="92">
+          <description><![CDATA[serverExists]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="92" name="param" description="server id or server name" type="string" variable="$idOrNameServer">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="92" name="param" description="value of the server (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="92" name="return" description="exists" type="bool">
+            <type by_reference="false">bool</type>
+          </tag>
+        </docblock>
+        <argument line="98">
+          <name>$idOrNameServer</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="98">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="132" package="">
+        <name>getServerOptions</name>
+        <type>function</type>
+        <docblock line="126">
+          <description><![CDATA[getServerOptions]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="126" name="param" description="server id or server name" type="string" variable="$idOrNameServer">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="126" name="param" description="value of the server (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="126" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="132">
+          <name>$idOrNameServer</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="132">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="172" package="">
+        <name>createServer</name>
+        <type>function</type>
+        <docblock line="166">
+          <description><![CDATA[createServer]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="166" name="param" description="a server name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="166" name="param" description="an optional array to set server options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="166" name="return" description="an array with the informations of the created server" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="172">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="172">
+          <name>$attrs</name>
+          <default><![CDATA[array ()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="206" package="">
+        <name>modifyServer</name>
+        <type>function</type>
+        <docblock line="199">
+          <description><![CDATA[modifyServer]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="199" name="param" description="server id or server name" type="string" variable="$idOrNameServer">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="199" name="param" description="an array to set server options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="199" name="param" description="value of the server (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="199" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="206">
+          <name>$idOrNameServer</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="206">
+          <name>$attrs</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="206">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="247" package="">
+        <name>deleteServer</name>
+        <type>function</type>
+        <docblock line="241">
+          <description><![CDATA[deleteServer]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="241" name="param" description="server id or server name" type="string" variable="$idOrNameServer">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="241" name="param" description="value of the server (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="241" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="247">
+          <name>$idOrNameServer</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="247">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Account.php" hash="4af7781b975c60228959124ca4ecf4b9" package="ZimbraSoapPhp">
+    <docblock line="3">
+      <description><![CDATA[Zm_Account]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+      <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+      <tag line="3" name="version" description="2.0"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+      <tag line="3" name="package" description="ZimbraSoapPhp"/>
+    </docblock>
+    <include line="15" type="Require Once" package="ZimbraSoapPhp">
+      <name>utils.php</name>
+      <docblock line="3">
+        <description><![CDATA[Zm_Account]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+        <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+        <tag line="3" name="version" description="2.0"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+        <tag line="3" name="package" description="ZimbraSoapPhp"/>
+      </docblock>
+    </include>
+    <class final="false" abstract="false" namespace="default" line="22" package="ZimbraSoapPhp">
+      <name>Zm_Account</name>
+      <full_name>\Zm_Account</full_name>
+      <extends/>
+      <docblock line="17">
+        <description><![CDATA[Zm_Account is a class which allows to manage Zimbra accounts via SOAP]]></description>
+        <long-description><![CDATA[<p>You may create, modify, rename, delete and get the attributes of a Zimbra account using this class</p>]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="28" package="ZimbraSoapPhp">
+        <name>$auth</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[$auth]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="soap authentication" type="\Zm_Auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="34" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="30">
+          <description><![CDATA[Constructor]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="param" description="soap authentication" type="\Zm_Auth" variable="$auth">
+            <type by_reference="false">\Zm_Auth</type>
+          </tag>
+        </docblock>
+        <argument line="34">
+          <name>$auth</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="46" package="">
+        <name>getAllAccounts</name>
+        <type>function</type>
+        <docblock line="40">
+          <description><![CDATA[getAllAccounts]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="40" name="param" description="domain id or domain name" type="string" variable="$idOrNameDomain">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="40" name="param" description="value of the domain (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="40" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="46">
+          <name>$idOrNameDomain</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="46">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="81" package="">
+        <name>getAccountId</name>
+        <type>function</type>
+        <docblock line="76">
+          <description><![CDATA[getAccountId]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="76" name="param" description="account name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="76" name="return" description="account id" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="81">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="112" package="">
+        <name>accountExists</name>
+        <type>function</type>
+        <docblock line="106">
+          <description><![CDATA[accountExists]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="106" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="106" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="106" name="return" description="exists" type="bool">
+            <type by_reference="false">bool</type>
+          </tag>
+        </docblock>
+        <argument line="112">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="112">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="146" package="">
+        <name>getAccountInfo</name>
+        <type>function</type>
+        <docblock line="140">
+          <description><![CDATA[getAccountInfo]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="140" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="140" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="140" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="146">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="146">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="182" package="">
+        <name>getAccountOption</name>
+        <type>function</type>
+        <docblock line="174">
+          <description><![CDATA[getAccountOption]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="174" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="174" name="param" description="name of the option to get" type="string" variable="$optName">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="174" name="param" description="(ATTR_SINGLEVALUE, ATTR_MULTIVALUE)" type="int" variable="$multisingle">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="174" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="174" name="return" description="option" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="182">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="182">
+          <name>$optName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="182">
+          <name>$multisingle</name>
+          <default><![CDATA[ATTR_SINGLEVALUE]]></default>
+          <type/>
+        </argument>
+        <argument line="182">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="218" package="">
+        <name>getAccountOptions</name>
+        <type>function</type>
+        <docblock line="212">
+          <description><![CDATA[getAccountOptions]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="212" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="212" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="212" name="return" description="options" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="218">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="218">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="259" package="">
+        <name>createAccount</name>
+        <type>function</type>
+        <docblock line="252">
+          <description><![CDATA[createAccount]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="252" name="param" description="account name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="252" name="param" description="password" type="string" variable="$password">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="252" name="param" description="an optional array to set account options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="252" name="return" description="account id" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="259">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="259">
+          <name>$password</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="259">
+          <name>$attrs</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="294" package="">
+        <name>setAccountPassword</name>
+        <type>function</type>
+        <docblock line="287">
+          <description><![CDATA[setAccountPassword]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="287" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="287" name="param" description="password" type="string" variable="$password">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="287" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="287" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="294">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="294">
+          <name>$password</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="294">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="337" package="">
+        <name>modifyAccount</name>
+        <type>function</type>
+        <docblock line="330">
+          <description><![CDATA[modifyAccount]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="330" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="330" name="param" description="an array to set account options" type="array" variable="$attrs">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="330" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="330" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="337">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="337">
+          <name>$attrs</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="337">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="379" package="">
+        <name>renameAccount</name>
+        <type>function</type>
+        <docblock line="372">
+          <description><![CDATA[renameAccount]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="372" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="372" name="param" description="new account name" type="string" variable="$newName">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="372" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="372" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="379">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="379">
+          <name>$newName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="379">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="419" package="">
+        <name>deleteAccount</name>
+        <type>function</type>
+        <docblock line="413">
+          <description><![CDATA[deleteAccount]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="413" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="413" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="413" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="419">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="419">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="458" package="">
+        <name>getAccountAliases</name>
+        <type>function</type>
+        <docblock line="452">
+          <description><![CDATA[getAccountAliases]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="452" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="452" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="452" name="return" description="aliases" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="458">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="458">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="470" package="">
+        <name>addAccountAlias</name>
+        <type>function</type>
+        <docblock line="463">
+          <description><![CDATA[addAccountAlias]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="463" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="463" name="param" description="account alias" type="string" variable="$alias">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="463" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="463" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="470">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="470">
+          <name>$alias</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="470">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="511" package="">
+        <name>removeAccountAlias</name>
+        <type>function</type>
+        <docblock line="504">
+          <description><![CDATA[removeAccountAlias]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="504" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="504" name="param" description="account alias" type="string" variable="$alias">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="504" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="504" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="511">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="511">
+          <name>$alias</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="511">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="551" package="">
+        <name>getAccountStatus</name>
+        <type>function</type>
+        <docblock line="545">
+          <description><![CDATA[getAccountStatus]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="545" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="545" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="545" name="return" description="status" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="551">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="551">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="563" package="">
+        <name>setAccountStatus</name>
+        <type>function</type>
+        <docblock line="556">
+          <description><![CDATA[setAccountStatus]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="556" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="556" name="param" description="the status (active, maintenance, pending, locked, closed)" type="string" variable="$status">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="556" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="556" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="563">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="563">
+          <name>$status</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="563">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="581" package="">
+        <name>getAccountCos</name>
+        <type>function</type>
+        <docblock line="574">
+          <description><![CDATA[getAccountCos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="574" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="574" name="param" description="get the COS ID or NAME" type="string" variable="$returnType">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="574" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="574" name="return" description="COS id or name" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="581">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="581">
+          <name>$returnType</name>
+          <default><![CDATA["NAME"]]></default>
+          <type/>
+        </argument>
+        <argument line="581">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="623" package="">
+        <name>setAccountCos</name>
+        <type>function</type>
+        <docblock line="616">
+          <description><![CDATA[setAccountCos]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="616" name="param" description="account id or account name" type="string" variable="$idOrNameAccount">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="616" name="param" description="the COS name" type="string" variable="$cosName">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="616" name="param" description="value of the account (auto, name, id)" type="string" variable="$type">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="616" name="return" description="informations" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="623">
+          <name>$idOrNameAccount</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="623">
+          <name>$cosName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="623">
+          <name>$type</name>
+          <default><![CDATA["auto"]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="635" package="">
+        <name>getCosId</name>
+        <type>function</type>
+        <docblock line="630">
+          <description><![CDATA[getCosId]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="630" name="param" description="the COS name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="630" name="return" description="COS id" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="635">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Auth.php" hash="e16e5e4423615d0a6465f1e6ce6737bd" package="ZimbraSoapPhp">
+    <docblock line="3">
+      <description><![CDATA[Zm_Auth]]></description>
+      <long-description><![CDATA[]]></long-description>
+      <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+      <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+      <tag line="3" name="version" description="2.0"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+      <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+      <tag line="3" name="package" description="ZimbraSoapPhp"/>
+    </docblock>
+    <parse_markers>
+      <error line="38" code="50018">No DocBlock was found for property $client</error>
+      <error line="39" code="50018">No DocBlock was found for property $soapHeader</error>
+      <error line="40" code="50018">No DocBlock was found for property $params</error>
+      <error line="41" code="50018">No DocBlock was found for property $authToken</error>
+      <error line="70" code="50010">No DocBlock was found for method execSoapCall()</error>
+      <error line="102" code="50010">No DocBlock was found for method getSoapHeader()</error>
+      <error line="107" code="50010">No DocBlock was found for method setSoapHeader()</error>
+      <error line="125" code="50010">No DocBlock was found for method getClient()</error>
+    </parse_markers>
+    <include line="15" type="Require Once" package="ZimbraSoapPhp">
+      <name>utils.php</name>
+      <docblock line="3">
+        <description><![CDATA[Zm_Auth]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="3" name="author" description="Yannick Lorenz &lt;ylorenz@1g6.biz&gt;"/>
+        <tag line="3" name="author" description="Fabrizio La Rosa &lt;fabrizio.larosa@unime.it&gt;"/>
+        <tag line="3" name="version" description="2.0"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2009, Yannick Lorenz"/>
+        <tag line="3" name="copyright" description="Copyright (c) 2012, Fabrizio La Rosa"/>
+        <tag line="3" name="package" description="ZimbraSoapPhp"/>
+      </docblock>
+    </include>
+    <class final="false" abstract="false" namespace="default" line="33" package="ZimbraSoapPhp">
+      <name>Zm_Auth</name>
+      <full_name>\Zm_Auth</full_name>
+      <extends/>
+      <docblock line="17">
+        <description><![CDATA[Zm_Auth is a class which allows to connect to the Zimbra admin space via SOAP]]></description>
+        <long-description><![CDATA[<p>Use this class to connect and login to a Zimbra server</p>
+
+<p>Example:</p>
+
+<pre><code>$auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword);
+$l = $auth->login();
+if(is_a($l, "Exception")) {
+    echo "Error : cannot login to $zimbraServer\n";
+    echo $l->getMessage()."\n";
+    exit();
+}
+</code></pre>]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="38" package="ZimbraSoapPhp">
+        <name>$client</name>
+        <default><![CDATA[]]></default>
+      </property>
+      <property final="false" static="false" visibility="private" line="39" package="ZimbraSoapPhp">
+        <name>$soapHeader</name>
+        <default><![CDATA[]]></default>
+      </property>
+      <property final="false" static="false" visibility="private" line="40" package="ZimbraSoapPhp">
+        <name>$params</name>
+        <default><![CDATA[]]></default>
+      </property>
+      <property final="false" static="false" visibility="private" line="41" package="ZimbraSoapPhp">
+        <name>$authToken</name>
+        <default><![CDATA[]]></default>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="49" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="43">
+          <description><![CDATA[Constructor]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="43" name="param" description="server name (example: zimbra.yourdomain.com)" type="string" variable="$server">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="43" name="param" description="admin account's username" type="string" variable="$username">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="43" name="param" description="admin account's password" type="string" variable="$password">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="49">
+          <name>$server</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="49">
+          <name>$username</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="49">
+          <name>$password</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="70" package="">
+        <name>execSoapCall</name>
+        <type>function</type>
+        <argument line="70">
+          <name>$request</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="70">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type/>
+        </argument>
+        <argument line="70">
+          <name>$options</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="102" package="">
+        <name>getSoapHeader</name>
+        <type>function</type>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="107" package="">
+        <name>setSoapHeader</name>
+        <type>function</type>
+        <argument line="107">
+          <name>$authToken</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="125" package="">
+        <name>getClient</name>
+        <type>function</type>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="default" line="133" package="">
+        <name>login</name>
+        <type>function</type>
+        <docblock line="130">
+          <description><![CDATA[Use this method to login to a Zimbra server after you create an instance of this class]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <package name="" full_name=""/>
+  <package name="ZimbraSoapPhp" full_name="ZimbraSoapPhp"/>
+  <namespace name="default" full_name="default"/>
+  <marker count="0">todo</marker>
+  <marker count="0">fixme</marker>
+  <deprecated count="0"/>
+</project>

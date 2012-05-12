@@ -1,289 +1,538 @@
 <?php
+
 /////////////
 // Require //
 /////////////
-require_once('Zm/Auth.php');
 
-require_once('Zm/Account.php');
-require_once('Zm/Domain.php');
-require_once('Zm/Server.php');
+require_once("config.php");
 
-require_once("Zm/utils.php");
+require_once("Zm/Auth.php");
+require_once("Zm/Account.php");
+require_once("Zm/Domain.php");
+require_once("Zm/Server.php");
 
+//////////
+// Args //
+//////////
 
-require_once("Zm/config.php");
-////////////
-// Config //
-////////////
-//$zimbraserver = "zmd.1g6.biz";
-//$zimbraadminemail = "admin@zmd.1g6.biz";
-//$zimbraadminpassword = "IgbDh2GN";
+if(PHP_SAPI != "cli")
+	$args = $_GET;
+else
+	$args = parse_args($argv);
 
-/////////
-// Get //
-/////////
-if(isset($_GET['nom']) || isset($_GET['newnom']))
+if(isset($args["action"]))
 {
-	$nom_compte = "test_soap_" . $_GET['nom']. "@" . $zimbraserver;
-	$new_nom_compte = "test_soap_" . $_GET['newnom']. "@" . $zimbraserver;
-
-	$nom_domaine = $_GET['nom'];
-	$new_nom_domaine = $_GET['newnom'];
-
-	$nom_serveur = $_GET['nom'];
-        //$new_nom_serveur = $_GET['newnom'];
+	$action = $args["action"];
 }
 else
 {
-	$rand = rand(0, 9999999999999);
-	$nom_compte = "test_soap_" . $rand . "@" . $zimbraserver;
-	$new_nom_compte = "new_test_soap_" . $rand . "@" . $zimbraserver;
-
-	$nom_domaine = "d" . $rand . ".com";
-	$new_nom_domaine = "newd" . $rand . ".com";
-
-	$nom_serveur = "s" . $rand . ".com";
-	//$new_nom_serveur = "news" . $rand . ".com";
+	echo "No action, exiting\n";
+	exit (-1);
 }
 
-if(isset($_GET['action']))
+if(isset($args["str"]))
 {
-    $action = $_GET['action'];
+	$account_name = "test_soap_" . $args["str"]. "@" . $domain;
+	$domain_name = "domainsoap" . $args["str"] . ".com";
+	$server_name = "serversoap." . $domain_name;
 }
 else
 {
-    $action = null;
+	$rand = rand(111111, 999999999);
+	$account_name = "acct_" . $rand . "@" . $domain;
+	$domain_name = "dom" . $rand . ".com";
+	$server_name = "srv" . $rand . "." . $domain_name;
 }
+
+if(isset($args["onam"]))
+	$nam_opt = $args["onam"];
+if(isset($args["oval"]))
+	$val_opt = $args["oval"];
+
 
 ///////////
 // Login //
 ///////////
-$auth = new Zm_Auth($zimbraserver, $zimbraadminemail, $zimbraadminpassword);
-$auth->login();
 
+$auth = new Zm_Auth($zimbraserver, $zimbraadminemail, $zimbraadminpassword);
+$l = $auth->login();
+if(is_a($l, "Exception")) {
+	echo "Error : cannot login to $zimbraserver :-(\n";
+	print_exception($l);
+	exit();
+}
 
 
 /////////////
 // Account //
 /////////////
+
 $accountManager = new Zm_Account($auth);
 
-	// Get Account Informations
-	if($action == "gai")
-	{
-		$infos = $accountManager->getAccountInfo("e4fb8e19-7d5e-40f1-b168-36a3ce2aa23e");
-		print_var($infos, "Get Account Informations");
-		if(!$infos)
-			echo "Erreur : impossible de récupérer les infos du compte :-(\n";
-		else
-			echo "OK : récupération des infos du compte :-)\n";
-	}
-		
+// Get All Accounts
+if($action == "gaa")
+{
+	$r = $accountManager->getAllAccounts($domain);
 
-	// Get All Accounts
-	if($action == "gaa")
-	{
-		$infos = $accountManager->getAllAccounts("zmd.1g6.biz");
-		//print_var($infos, "Get All Accounts");
-		if(!$infos)
-			echo "Erreur : impossible de récupérer la liste des comptes du domaine $nom_domaine :-(\n";
-		else
-			echo "OK : récupération de la liste des comptes du domaine $nom_domaine :-)\n";
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the list of accounts for domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
+		//print_var($r, "Get All Accounts");
+		echo "OK : got the list of accounts for domain $domain_name :-)\n";
 	}
+}
 
-	// Create Account
-	if($action == "ca")
-	{
-		$id = $accountManager->createAccount($nom_compte, 'password');
-		print_var($id, "Create Account");
-		if(!$id)
-			echo "Erreur : compte $nom_compte ($id) pas cr&eacute;&eacute; :-(\n";
-		else
-			echo "OK : compte $nom_compte ($id) cr&eacute;&eacute; :-)\n";
+// Create Account
+if($action == "ca")
+{
+	$attrs = array("sn"=>"John", "gn"=>"Doe", "l"=>"Metropolis");
+	$r = $accountManager->createAccount($account_name, "password", $attrs);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : account $account_name not created :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Create Account : id");
+		echo "OK : account $account_name created :-)\n";
 	}
+}
 
-	// Delete Account
-	if($action == "da")
-	{
-		$id = $accountManager->getAccountId($nom_compte);
-		print_var($id, "Delete Account : id");
-		$r = $accountManager->deleteAccount($id);
+// Account Exists
+if($action == "gax")
+{
+	print_var($account_name, "Check Account Existence");
+	$r = $accountManager->accountExists($account_name);
+
+	if(!$r) {
+		echo "NO: account $account_name doesn't exist :-(\n";
+		exit();
+	} else {
+		echo "YES : account $account_name exists :-)\n";
+	}
+}
+
+// Get Account Informations
+if($action == "gai")
+{
+	$r = $accountManager->getAccountInfo($account_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the infos for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account Informations");
+		echo "OK : got the infos for account $account_name :-)\n";
+	}
+}
+
+// Get Account Options
+if($action == "gaao")
+{
+	$r = $accountManager->getAccountOptions($account_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the options for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account Options");
+		echo "OK : got the options for account $account_name :-)\n";
+	}
+}
+
+// Get Account Option
+if($action == "gao")
+{
+	if (!$nam_opt)
+		$nam_opt = "zimbraMailHost";
+	$r = $accountManager->getAccountOption($account_name, $nam_opt);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the option for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account Option");
+		echo "OK : got the option for account $account_name :-)\n";
+	}
+}
+
+// Set Account password
+if($action == "sap")
+{
+	$r = $accountManager->setAccountPassword($account_name, "newpassword");
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot change password for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Set Account Password");
+		echo "OK : password changed for account $account_name :-)\n";
+	}
+}
+
+// Modify Account
+if($action == "ma")
+{
+	if (!$nam_opt)
+		$nam_opt = "streetAddress";
+	if (!$val_opt)
+		$val_opt = "234, 5th Avenue";
+	$new_attrs = array($nam_opt=>$val_opt);
+	print_var($new_attrs, "Modify Account");
+	$r = $accountManager->modifyAccount($account_name, $new_attrs);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot modify account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Modify Account : Response");
+		echo "OK : modify account $account_name :-)\n";
+	}
+}
+
+// Rename Account
+if($action == "ra")
+{
+	$new_account_name = "newname_".$account_name;
+	$r = $accountManager->renameAccount($account_name, $new_account_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : account $account_name not renamed to $new_account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Rename Account");
+		echo "OK : account $account_name renamed to $new_account_name :-)\n";
+	}
+}
+
+// Delete Account
+if($action == "da")
+{
+	$r = $accountManager->deleteAccount($account_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : account $account_name not deleted :-(\n";
+		print_exception($r);
+	} else {
 		print_var($r, "Delete Account : Response");
-                
-		if(!$r)
-			echo "Erreur : compte $nom_compte ($id) pas supprim&eacute;\n";
-		else
-			echo "OK : compte $nom_compte ($id) supprim&eacute;\n";
+		echo "OK : account $account_name deleted :-)\n";
 	}
+}
 
+// Get Account Status
+if($action == "gat")
+{
+	$r = $accountManager->getAccountStatus($account_name);
 
-	// Rename Account
-	if($action == "ra")
-	{
-		$id = $accountManager->createAccount($nom_compte, 'newaccounttest');
-                print_var($id, "Rename Account : id");
-		$r = $accountManager->renameAccount($id, $new_nom_compte);
-                print_var($r, "Rename Account : Response");
-
-		if(!$r)
-			echo "Erreur : compte $nom_compte pas renomm&eacute; en $new_nom_compte\n";
-		else
-			echo "OK : compte $nom_compte renomm&eacute; en $new_nom_compte\n";
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the status for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account Status");
+		echo "OK : got the status for account $account_name :-)\n";
 	}
+}
 
-	// Add account alias
-	if($action == "aaa")
-	{
-		$aliases = $accountManager->addAccountAlias($nom_compte, "alias_" . $nom_compte);
-                print_var($aliases, "Add account alias");
+// Set Account Status
+if($action == "sat")
+{
+	if (!$val_opt)
+		$val_opt = ($accountManager->getAccountStatus($account_name) == "active") ? "locked" : "active";
+	print_var($val_opt, "Set Account Status");
+	$r = $accountManager->setAccountStatus($account_name, $val_opt);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot modify status for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Set Account Status : Response");
+		echo "OK : modified status for account $account_name :-)\n";
 	}
+}
 
-	// Remove account alias
-	if($action == "raa")
-	{
-                $aliases = $accountManager->addAccountAlias($nom_compte, "alias_" . $nom_compte);
-		$array = $accoutManager->removeAccountAlias($nom_compte, "alias_" . $nom_compte);
-                print_var($array, "Remove account alias");
+// Get Account COS name
+if($action == "gacn")
+{
+	$r = $accountManager->getAccountCos($account_name, "NAME");
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the COS name for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account COS Name");
+		echo "OK : got the COS name for account $account_name :-)\n";
 	}
+}
 
-        // Get account aliases
-        if($action == "gaalias")
-	{
-            $infos = $accountManager->getAccountAliases("e4fb8e19-7d5e-40f1-b168-36a3ce2aa23e");
-            print_var($infos, "Get Account Aliases");
-            if(!$infos)
-                    echo "Erreur : impossible de récupérer les alias du compte :-(\n";
-            else
-                    echo "OK : récupération des alias du compte :-)\n";
-        }
+// Get Account COS id
+if($action == "gaci")
+{
+	$r = $accountManager->getAccountCos($account_name, "ID");
 
-        // Set Account password
-        if($action == "sap")
-        {
-            $infos = $accountManager->setAccountPassword("test_soap_1002912237@zmd.1g6.biz", "newpassword");
-            print_var($infos, "Set Account Password");
-            if(!$infos)
-                    echo "Erreur : impossible de changer le mot de passe :-(\n";
-            else
-                    echo "OK : changement du mot de passe :-)\n";
-        }
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the COS id for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account COS Id");
+		echo "OK : got the COS id for account $account_name :-)\n";
+	}
+}
 
+// Set Account COS
+if($action == "sac")
+{
+	if (!$val_opt)
+		$val_opt = "testcos";
+	print_var($val_opt, "Set Account COS");
+	$r = $accountManager->setAccountCOS($account_name, $val_opt);
 
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot modify COS for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Set Account COS : Response");
+		echo "OK : modified COS for account $account_name :-)\n";
+	}
+}
 
+// Add account alias
+if($action == "aaa")
+{
+	$alias = "alias_" . $account_name;
+	$r = $accountManager->addAccountAlias($account_name, $alias);
 
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot add alias for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Add account alias");
+		echo "OK : added alias to account $account_name :-)\n";
+	}
+}
+
+// Get account aliases
+if($action == "gal")
+{
+	$r = $accountManager->getAccountAliases($account_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the  alias for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Account Aliases");
+		echo "OK : got the alias for account $account_name :-)\n";
+	}
+}
+
+// Remove account alias
+if($action == "raa")
+{
+	$alias = "alias_" . $account_name;
+	$r = $accountManager->removeAccountAlias($account_name, $alias);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot remove alias for account $account_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Remove account alias");
+		echo "OK : removed alias to account $account_name :-)\n";
+	}
+}
 
 
 ////////////
 // Domain //
 ////////////
+
 $domainManager = new Zm_Domain($auth);
 
+// Get All Domains
+if($action == "gad")
+{
+	$r = $domainManager->getAllDomains();
 
-	// Get All Domains
-	if($action == "gad")
-	{
-		$infos = $domainManager->getAllDomains();
-		print_var($infos);
-		if(!$infos)
-			echo "Erreur : impossible de récupérer la liste des domaines :-(\n";
-		else
-			echo "OK : récupération de la liste des domaines :-)\n";
-	}
-
-	// Create Domain
-	if($action == "cd")
-	{
-		$id = $domainManager->createDomain($nom_domaine);
-
-		if(!$id)
-			echo "Erreur : création domaine $nom_domaine\n";
-		else
-			echo "OK : création domaine $nom_domaine\n";
-	}
-
-
-	// Delete Domain
-	if($action == "dd")
-	{
-		$id = $domainManager->getDomainId("d197089307.com");               
-                //$id = $domainManager->getDomainId("zmd.1g6.biz");
-		print_var($id);
-		$r = $domainManager->deleteDomain($id);
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the list of domains :-(\n";
+		print_exception($r);
+	} else {
 		print_var($r);
-		if(!$r)
-			echo "Erreur : suppression domaine $nom_domaine\n";
-		else
-			echo "OK : suppression domaine $nom_domaine\n";
+		echo "OK : got the the list of domains :-)\n";
 	}
+}
 
-	// Modify Domain
-	if($action == "md")
-	{
-		$infos = $domainManager->createDomain($nom_domaine);
-		print_var($infos);
-		$r = $domainManager->modifyDomain($infos['ID'], $infos['A']);
+// Create Domain
+if($action == "cd")
+{
+	$r = $domainManager->createDomain($domain_name);
 
-		if(!$r)
-			echo "Erreur : modification domaine $nom_domaine\n";
-		else
-			echo "OK : modification domaine $nom_domaine\n";
+	if(is_a($r, "Exception")) {
+		echo "Error : creating domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Create Domain : id");
+		echo "OK : domain $domain_name created :-)\n";
 	}
+}
+
+// Domain Exists
+if($action == "gdx")
+{
+	print_var($domain_name, "Check Domain Existence");
+	$r = $domainManager->domainExists($domain_name);
+
+	if(!$r) {
+		echo "NO: domain $domain_name doesn't exist :-(\n";
+		exit();
+	} else {
+		echo "YES : domain $domain_name exists :-)\n";
+	}
+}
+
+// Get Domain Options
+if($action == "gdao")
+{
+	$r = $domainManager->getDomainOptions($domain_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the options for domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Domain Options");
+		echo "OK : got the options for domain $domain_name :-)\n";
+	}
+}
+
+// Modify Domain
+if($action == "md")
+{
+	if (!$nam_opt)
+		$nam_opt = "zimbraGalLdapPageSize";
+	if (!$val_opt)
+		$val_opt = 222;
+	$new_attrs = array($nam_opt=>$val_opt);
+	print_var($new_attrs, "Modify Domain : setting");
+	$r = $domainManager->modifyDomain($domain_name, $new_attrs);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : modifying domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Modify Domain : Response");
+		echo "OK : domain $domain_name modified :-)\n";
+	}
+}
+
+// Delete Domain
+if($action == "dd")
+{
+	$r = $domainManager->deleteDomain($domain_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : deleting domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Delete Domain : Response");
+		echo "OK : domain $domain_name deleted :-)\n";
+	}
+}
+
 
 ////////////
 // Server //
 ////////////
+
 $serverManager = new Zm_Server($auth);
 
-	// Get All Server
-	if($action == "gs")
-	{
-		$infos = $serverManager->getAllServers();
-		print_var($infos);
-		if(!$infos)
-			echo "Erreur : impossible de récupérer la liste des comptes du domaine $nom_domaine :-(\n";
-		else
-			echo "OK : récupération de la liste des comptes du domaine $nom_domaine :-)\n";
-	}
+// Get All Servers
+if($action == "gas")
+{
+	$r = $serverManager->getAllServers();
 
-	// Create Server
-	if($action == "cs")
-	{
-		$id = $serverManager->createServer($nom_serveur);
-		print_var($id);
-		if(!$id)
-			echo "Erreur : création serveur $nom_serveur\n";
-		else
-			echo "OK : création serveur $nom_serveur\n";
-	}
-
-
-	// Delete Server
-	if($action == "ds")
-	{
-		$id = $serverManager->getServerId("s260450272.com");
-		print_var($id);
-		$r = $serverManager->deleteServer($id);
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the list of servers for domain $domain_name :-(\n";
+		print_exception($r);
+	} else {
 		print_var($r);
-
-		if(!$r)
-			echo "Erreur : suppression serveur $nom_serveur\n";
-		else
-			echo "OK : suppression serveur $nom_serveur\n";
+		echo "OK : got the list of servers for domain $domain_name :-)\n";
 	}
+}
 
-	// Modify Server
-	if($action == "ms")
-	{
-		$infos = $serverManager->createServer($nom_serveur);
-		print_var($infos);
-		$r = $serverManager->modifyServer($infos['ID'], $infos['A']);
+// Create Server
+if($action == "cs")
+{
+	$r = $serverManager->createServer($server_name);
 
-		if(!$r)
-			echo "Erreur : modification serveur $nom_serveur\n";
-		else
-			echo "OK : modification serveur $nom_serveur\n";
+	if(is_a($r, "Exception")) {
+		echo "Error : creating server $server_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Create Server : id");
+		echo "OK : server $server_name created :-)\n";
 	}
+}
 
+// Server Exists
+if($action == "gsx")
+{
+	print_var($server_name, "Check Server Existence");
+	$r = $serverManager->serverExists($server_name);
 
+	if(!$r) {
+		echo "NO: server $server_name doesn't exist :-(\n";
+		exit();
+	} else {
+		echo "YES : server $server_name exists :-)\n";
+	}
+}
+
+// Get Server Options
+if($action == "gsao")
+{
+	$r = $serverManager->getServerOptions($server_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the options for server $server_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get Server Options");
+		echo "OK : got the options for server $server_name :-)\n";
+	}
+}
+
+// Modify Server
+if($action == "ms")
+{
+	if (!$nam_opt)
+		$nam_opt = "zimbraHttpSSLNumThreads";
+	if (!$val_opt)
+		$val_opt = 333;
+	$new_attrs = array($nam_opt=>$val_opt);
+	print_var($new_attrs, "Modify Server : setting");
+	$r = $serverManager->modifyServer($server_name, $new_attrs);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : modifying server $server_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Modify Server : Response");
+		echo "OK : server $server_name modified :-)\n";
+	}
+}
+
+// Delete Server
+if($action == "ds")
+{
+	$r = $serverManager->deleteServer($server_name);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : deleting server $server_name :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Delete Server : Response");
+		echo "OK : server $server_name deleted :-)\n";
+	}
+}
+
+if(!$r) echo "Invalid action!\n";
 
 ?>

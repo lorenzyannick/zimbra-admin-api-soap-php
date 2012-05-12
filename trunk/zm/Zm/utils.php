@@ -1,11 +1,14 @@
 <?php
 
+define(ATTR_SINGLEVALUE, 1);
+define(ATTR_MULTIVALUE, 2);
+
 /////////
 // XML //
 /////////
+
 class xml2Array
 {
-
 	var $stack=array();
 	var $stack_ref;
 	var $arrOutput = array();
@@ -89,45 +92,105 @@ class xml2Array
 	}
 }
 
+function getSoapAttribute($allAttrs, $attrName, $multisingle=ATTR_SINGLEVALUE)
+{
+        $attrs = array ();
+		foreach ($allAttrs as $a) {
+			if ($a['N'] == $attrName){
+				$attrs[] = $a['DATA'];
+				if ($multisingle == ATTR_SINGLEVALUE) break;
+			}
+		}
+
+		if ($multisingle == ATTR_MULTIVALUE)
+			return $attrs;
+		else
+			return $attrs[0];
+}
+
 ////////////////
 // Exceptions //
 ////////////////
+
 function print_exception($ex)
 {
-	echo "Exception caught!...<br><br>EXCEPTION START <<<<<<<<<<< <p>";
-	echo $ex . "<br><br>";
-	echo ">>>>>>>>>>>> EXCEPTION END<p>";
+	if (PHP_SAPI != "cli") {
+		$nl = "<br/>";
+		$pre1 = "<pre>";
+		$pre2 = "</pre>";
+	} else {
+		$nl = "\n";
+		$pre1 = $nl.$nl;
+		$pre2 = $nl.$nl;
+	}
+	echo "Exception caught!...".$nl.$nl."EXCEPTION START <<<<<<<<<<< ";
+	echo $pre1 . $ex . $pre2;
+	echo ">>>>>>>>>>>> EXCEPTION END".$nl;
 }
-
-
 
 ///////////////
 // Variables //
 ///////////////
+
 function print_var($var, $titre = "")
+
 {
-	if(is_array($var))
-	{
-		echo "<h1>$titre</h1>";
-                echo "<pre>";
-		print_r($var);
-		echo "</pre>";
-                echo "<hr>";
+	if (PHP_SAPI != "cli") {
+		$nl = "<br/>";
+		$pre1 = "<pre>";
+		$pre2 = "</pre>";
+		$sep = "<hr>";
+		$title = "<h1>".$titre."</h1>";
+	} else {
+		$nl = "\n";
+		$pre1 = $nl.$nl;
+		$pre2 = $nl.$nl;
+		$sep = str_repeat("-", 80).$nl;
+		$title = "\033[1m"."--- ".$titre." ---"."\033[0m";
 	}
-	else // if(is_string($var))
-	{
-                echo "<h1>$titre</h1>";
-		echo "<br />";
-		print_r($var);
-		echo "<br />";
-                echo "<hr>";
-	}
+
+	echo $title;
+	echo $pre1;
+	print_r($var);
+	echo $pre2;
+	echo $sep;
 }
 
+function parse_args($argv){
+    array_shift($argv);
+    $out = array();
+    foreach ($argv as $arg){
+        if (substr($arg,0,2) == '--'){
+            $eqPos = strpos($arg,'=');
+            if ($eqPos === false){
+                $key = substr($arg,2);
+                $out[$key] = isset($out[$key]) ? $out[$key] : true;
+            } else {
+                $key = substr($arg,2,$eqPos-2);
+                $out[$key] = substr($arg,$eqPos+1);
+            }
+        } else if (substr($arg,0,1) == '-'){
+            if (substr($arg,2,1) == '='){
+                $key = substr($arg,1,1);
+                $out[$key] = substr($arg,3);
+            } else {
+                $chars = str_split(substr($arg,1));
+                foreach ($chars as $char){
+                    $key = $char;
+                    $out[$key] = isset($out[$key]) ? $out[$key] : true;
+                }
+            }
+        } else {
+            $out[] = $arg;
+        }
+    }
+    return $out;
+}
 
 /////////////
 // Account //
 /////////////
+
 function isAccountId($str)
 {
 	$syntaxe = '#[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}#';
@@ -149,32 +212,33 @@ function isAccountName($str)
 function getAccountType($str)
 {
 	$outputType = null;
-
 	if(isAccountName($str))
 		$outputType = "name";
 	else if (isAccountId($str))
 		$outputType = "id";
+    else
+		echo "Unknown AccountType";
 
 	return $outputType;
 }
 
-
 ////////////
 // Domain //
 ////////////
+
 function isDomainId($str)
 {
-        $syntaxe = '#[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}#';
-        if(preg_match($syntaxe,$str))
-            return true;
-        else
-            return false;
+	$syntaxe = '#[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}#';
+	if(preg_match($syntaxe,$str))
+		return true;
+	else
+		return false;
 }
 
 
 function isDomainName($str)
 {
-        $syntaxe = '#([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9}#';
+    $syntaxe = '#([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9}#';
 	if(preg_match($syntaxe,$str))
 		return true;
 	else
@@ -186,26 +250,27 @@ function isDomainName($str)
 function getDomainType($str)
 {
 	$outputType = null;
-
 	if(isDomainName($str))
 		$outputType = "name";
 	else if (isDomainId($str))
 		$outputType = "id";
-        else
-                $outputType = "mmmmm";
+    else
+		echo "Unknown DomainType";
+
 	return $outputType;
 }
 
 ////////////
 // Server //
 ////////////
+
 function isServerId($str)
 {
 	$syntaxe = '#[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}#';
-        if(preg_match($syntaxe,$str))
-            return true;
-        else
-            return false;
+	if(preg_match($syntaxe,$str))
+		return true;
+	else
+		return false;
 }
 
 function isServerName($str)
@@ -220,112 +285,14 @@ function isServerName($str)
 function getServerType($str)
 {
 	$outputType = null;
-
 	if(isServerName($str))
 		$outputType = "name";
 	else if (isServerId($str))
 		$outputType = "id";
-        else
-            echo "ggggggggggggggggg";
-            
+	else
+		echo "Unknown ServerType";
+
 	return $outputType;
 }
-
-
-
-
-
-
-
-
-
-
-///////////
-// Trash //
-///////////
-/*
-function &composeArray($array, $elements, $value=array())
-{
-global $XML_LIST_ELEMENTS;
-
-// get current element
-$element = array_shift($elements);
-
-// does the current element refer to a list
-if(sizeof($elements) > 0)
-{
-    $array[$element][sizeof($array[$element])-1] = &composeArray($array[$element][sizeof($array[$element])-1], $elements, $value);
-}
-else // if (is_array($value))
-{
-    $array[$element][sizeof($array[$element])] = $value;
-}
-
-return $array;
-} // end composeArray 
-
-
-
-
-function makeXMLTree($data) 
-{
-// create parser
-$parser = xml_parser_create();
-xml_parser_set_option($parser,XML_OPTION_CASE_FOLDING,0);
-xml_parser_set_option($parser,XML_OPTION_SKIP_WHITE,1);
-xml_parse_into_struct($parser,$data,$values,$tags);
-xml_parser_free($parser);
-
-// we store our path here
-$hash_stack = array();
-
-// this is our target
-$ret = array();
-foreach ($values as $key => $val) {
-
-    switch ($val['type']) {
-        case 'open':
-            array_push($hash_stack, $val['tag']);
-            if (isset($val['attributes']))
-                $ret = composeArray($ret, $hash_stack, $val['attributes']);
-            else
-                $ret = composeArray($ret, $hash_stack);
-        break;
-
-        case 'close':
-            array_pop($hash_stack);
-        break;
-
-        case 'complete':
-            array_push($hash_stack, $val['tag']);
-            $ret = composeArray($ret, $hash_stack, $val['value']);
-            array_pop($hash_stack);
-
-            // handle attributes
-            if (isset($val['attributes']))
-            {
-                foreach($val['attributes'] as $a_k=>$a_v)
-                {
-                    $hash_stack[] = $val['tag'].'_attribute_'.$a_k;
-                    $ret = composeArray($ret, $hash_stack, $a_v);
-                    array_pop($hash_stack);
-                }
-            }
-
-        break;
-    }
-}
-
-return $ret;
-}
-
-*/
-
-
-
-
-
-
-
 
 ?>
