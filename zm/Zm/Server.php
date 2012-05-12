@@ -66,7 +66,7 @@ class Zm_Server
 	 */
 	function getServerId($name)
 	{
-        $result = null;
+		$result = null;
 
 		$params = array(
 			new SoapVar('<server by="name">' . $name . '</server>', XSD_ANYXML)
@@ -89,7 +89,7 @@ class Zm_Server
 		return $result;
 	}
 
-    /**
+	/**
 	 * serverExists
 	 * @param string $idOrNameServer server id or server name
 	 * @param string $type value of the server (auto, name, id)
@@ -123,7 +123,7 @@ class Zm_Server
 		return (!is_a($result, "Exception"));
 	}
 
-    /**
+	/**
 	 * getServerOptions
 	 * @param string $idOrNameServer server id or server name
 	 * @param string $type value of the server (auto, name, id)
@@ -166,7 +166,7 @@ class Zm_Server
 	/**
 	 * createServer
 	 * @param string $name a server name
-     * @param array $attrs an optional array to set server options
+	 * @param array $attrs an optional array to set server options
 	 * @return array an array with the informations of the created server
 	 */
 	function createServer($name, $attrs = array ())
@@ -241,7 +241,7 @@ class Zm_Server
 	/**
 	 * deleteServer
 	 * @param string $idOrNameServer server id or server name
-     * @param string $type value of the server (auto, name, id)
+	 * @param string $type value of the server (auto, name, id)
 	 * @return array informations
 	 */
 	function deleteServer($idOrNameServer, $type="auto")

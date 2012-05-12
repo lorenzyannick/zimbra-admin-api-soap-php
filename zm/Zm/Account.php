@@ -50,7 +50,7 @@ class Zm_Account
 		else
 			$realType = $type;
 
-        $result = null;
+		$result = null;
 
 		$params = array(
 			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML)
@@ -103,7 +103,7 @@ class Zm_Account
 		return $result;
 	}
 
-    /**
+	/**
 	 * accountExists
 	 * @param string $idOrNameAccount account id or account name
 	 * @param string $type value of the account (auto, name, id)
@@ -137,7 +137,7 @@ class Zm_Account
 		return (!is_a($result, "Exception"));
 	}
 
-    /**
+	/**
 	 * getAccountInfo
 	 * @param string $idOrNameAccount account id or account name
 	 * @param string $type value of the account (auto, name, id)
@@ -209,7 +209,7 @@ class Zm_Account
 		return $result;
 	}
 
-    /**
+	/**
 	 * getAccountOptions
 	 * @param string $idOrNameAccount account id or account name
 	 * @param string $type value of the account (auto, name, id)
@@ -562,7 +562,7 @@ class Zm_Account
 	 */
 	function setAccountStatus($idOrNameAccount, $status, $type = "auto")
 	{
- 		$hideInGAL = ($status == "active") ? "FALSE" : "TRUE";
+		$hideInGAL = ($status == "active") ? "FALSE" : "TRUE";
 		$attrs = array(
 			"zimbraAccountStatus"=>$status,
 			"zimbraHideInGal"=>$hideInGAL
