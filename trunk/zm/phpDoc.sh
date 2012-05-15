@@ -1,8 +1,7 @@
 #! /bin/bash
 # Script for generatig php documentation
 
-DOCDIR=docs/
-PKGDIR=Zm/
+DOCDIR=docs
+PKGDIR=.
 
-[ -d $DOCDIR ] && rm -r $DOCDIR
-phpdoc --defaultpackagename ZimbraSoapPhp -i *test*.php,utils.php -d $PKGDIR -t $DOCDIR
+phpdoc -v --defaultpackagename ZimbraSoapPhp -i config.php,*/utils.php,nbproject/* --sourcecode on -d $PKGDIR -t $DOCDIR

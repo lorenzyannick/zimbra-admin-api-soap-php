@@ -18,6 +18,8 @@ require_once ("utils.php");
  * Zm_Account is a class which allows to manage Zimbra accounts via SOAP
  *
  * You may create, modify, rename, delete and get the attributes of a Zimbra account using this class
+ *
+ * For the usage examples of all class methods check the source code of test.php
  */
 class Zm_Account
 {
@@ -275,6 +277,7 @@ class Zm_Account
 			);
 
 			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEACCOUNTRESPONSE']['ACCOUNT']['ID'];
+			usleep(250000); // introduce a small delay, otherwise some troubles may arise if we modify the new account right after its creation
 		}
 		catch (SoapFault $exception)
 		{
@@ -568,7 +571,9 @@ class Zm_Account
 			"zimbraHideInGal"=>$hideInGAL
 		);
 
-		return $this->modifyAccount($idOrNameAccount, $attrs, $type);
+		$result = $this->modifyAccount($idOrNameAccount, $attrs, $type);
+
+		return $result;
 	}
 
 	/**
@@ -624,7 +629,10 @@ class Zm_Account
 	{
 		$cosId = $this->getCosId($cosName);
 		$attrs = array("zimbraCOSId"=>$cosId);
-		return $this->modifyAccount($idOrNameAccount, $attrs, $type);
+
+		$result = $this->modifyAccount($idOrNameAccount, $attrs, $type);
+
+		return $result;
 	}
 
 	/**
