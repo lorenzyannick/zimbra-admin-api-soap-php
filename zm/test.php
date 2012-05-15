@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * test.php
+ *
+ * In this file there are all the usage examples useful to learn and test all the
+ * class methods for the Zm_Account, Zm_Server, Zm_Domain and Zm_Auth classes
+ *
+ * @author Yannick Lorenz <ylorenz@1g6.biz>
+ * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
+ * @version 2.0
+ * @copyright Copyright (c) 2009, Yannick Lorenz
+ * @copyright Copyright (c) 2012, Fabrizio La Rosa
+ * @package ZimbraSoapPhp
+ * @name test.php
+ * @filesource
+ */
+/**
+ * test.php examples
+ */
+
 /////////////
 // Require //
 /////////////

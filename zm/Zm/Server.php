@@ -18,6 +18,8 @@ require_once ("utils.php");
  * Zm_Server is a class which allows to manage Zimbra servers via SOAP
  *
  * You may create, modify, rename, delete and get the attributes of a Zimbra server using this class
+ *
+ * For the usage examples of all class methods check the source code of test.php
  */
 class Zm_Server
 {
@@ -187,6 +189,7 @@ class Zm_Server
 			);
 
 			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATESERVERRESPONSE']['SERVER'];
+			usleep(250000); // introduce a small delay, otherwise some troubles may arise if we modify the new server right after its creation
 		}
 		catch (SoapFault $exception)
 		{

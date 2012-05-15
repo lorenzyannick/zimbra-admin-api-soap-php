@@ -18,6 +18,8 @@ require_once ("utils.php");
  * Zm_Domain is a class which allows to manage Zimbra domains via SOAP
  *
  * You may create, modify, rename, delete and get the attributes of a Zimbra domain using this class
+ *
+ * For the usage examples of all class methods check the source code of test.php
  */
 class Zm_Domain
 {
@@ -64,7 +66,7 @@ class Zm_Domain
 	 * @param string $name a domain name
 	 * @return string a domain id
 	 */
-	function getDomainId($name) // don't forget the "virtualHostname" type
+	function getDomainId($name)
 	{
 		$result = null;
 
@@ -176,6 +178,7 @@ class Zm_Domain
 			);
 
 			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['CREATEDOMAINRESPONSE']['DOMAIN'];
+			usleep(250000); // introduce a small delay, otherwise some troubles may arise if we modify the new domain right after its creation
 		}
 		catch (SoapFault $exception)
 		{
