@@ -71,7 +71,7 @@ class Zm_Domain
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="name">' . $name . '</domain>', XSD_ANYXML)
+			new SoapVar('<domain by="name">' . $name . '</domain>', XSD_ANYXML),
 		);
 
 		try
@@ -130,7 +130,7 @@ class Zm_Domain
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML)
+			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML),
 		);
 
 		try
@@ -157,15 +157,15 @@ class Zm_Domain
 	/**
 	 * createDomain
 	 * @param string $name a domain name
-	 * @param array $attrs an optional array to set domain options
-	 * @return array an array with the informations of the created domain
+	 * @param array $attrs an optional array containing the domain attributes to be set
+	 * @return array an array with the new domain's info
 	 */
 	function createDomain($name, $attrs = array())
 	{
 		$result = null;
 
 		$params = array(
-			new SoapParam($name, "name")
+			new SoapParam($name, "name"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
@@ -191,7 +191,7 @@ class Zm_Domain
 	/**
 	 * modifyDomain
 	 * @param string $idOrNameDomain domain id or domain name
-	 * @param array $attrs an array to set domain options
+	 * @param array $attrs an array containing the domain attributes to be set
 	 * @param string $type value of the domain (auto, name, id)
 	 * @return array
 	 */
@@ -210,7 +210,7 @@ class Zm_Domain
 		$result = null;
 
 		$params = array(
-			new SoapParam($domainId, "id")
+			new SoapParam($domainId, "id"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);

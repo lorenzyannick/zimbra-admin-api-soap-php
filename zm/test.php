@@ -374,7 +374,7 @@ if($action == "gad")
 		echo "Error : cannot fetch the list of domains :-(\n";
 		print_exception($r);
 	} else {
-		print_var($r);
+		print_var($r, "Get All Domains");
 		echo "OK : got the the list of domains :-)\n";
 	}
 }
@@ -471,7 +471,7 @@ if($action == "gas")
 		echo "Error : cannot fetch the list of servers for domain $domain_name :-(\n";
 		print_exception($r);
 	} else {
-		print_var($r);
+		print_var($r, "Get All Servers");
 		echo "OK : got the list of servers for domain $domain_name :-)\n";
 	}
 }

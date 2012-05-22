@@ -55,7 +55,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML)
+			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML),
 		);
 
 		try
@@ -85,7 +85,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="name">' . $name . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="name">' . $name . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -121,7 +121,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -155,7 +155,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -191,7 +191,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -227,7 +227,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -255,8 +255,8 @@ class Zm_Account
 	 * createAccount
 	 * @param string $name account name
 	 * @param string $password password
-	 * @param array $attrs an optional array to set account options
-	 * @return string account id
+	 * @param array $attrs an optional array containing the account attributes to be set
+	 * @return string the new account's id
 	 */
 	function createAccount($name, $password, $attrs = array())
 	{
@@ -264,7 +264,7 @@ class Zm_Account
 
 		$params = array(
 			new SoapParam($name, "name"),
-			new SoapParam($password, "password")
+			new SoapParam($password, "password"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
@@ -310,7 +310,7 @@ class Zm_Account
 
 		$params = array(
 			new SoapParam($accountId, "id"),
-			new SoapParam($password, "newPassword")
+			new SoapParam($password, "newPassword"),
 		);
 
 		try
@@ -333,7 +333,7 @@ class Zm_Account
 	/**
 	 * modifyAccount
 	 * @param string $idOrNameAccount account id or account name
-	 * @param array $attrs an array to set account options
+	 * @param array $attrs an array containing the account attributes to be set
 	 * @param string $type value of the account (auto, name, id)
 	 * @return array informations
 	 */
@@ -352,7 +352,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapParam($accountId, "id")
+			new SoapParam($accountId, "id"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
@@ -395,7 +395,7 @@ class Zm_Account
 
 		$params = array(
 			new SoapParam($accountId, "id"),
-			new SoapParam($newName, "newName")
+			new SoapParam($newName, "newName"),
 		);
 
 		try
@@ -486,7 +486,7 @@ class Zm_Account
 
 		$params = array(
 			new SoapParam($accountId, "id"),
-			new SoapParam($alias, "alias")
+			new SoapParam($alias, "alias"),
 		);
 
 		try
@@ -527,7 +527,7 @@ class Zm_Account
 
 		$params = array(
 			new SoapParam($accountId, "id"),
-			new SoapParam($alias, "alias")
+			new SoapParam($alias, "alias"),
 		);
 
 		try
@@ -598,7 +598,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML)
+			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
 
 		try
@@ -645,7 +645,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<cos by="name">' . $name . '</cos>', XSD_ANYXML)
+			new SoapVar('<cos by="name">' . $name . '</cos>', XSD_ANYXML),
 		);
 
 		try
