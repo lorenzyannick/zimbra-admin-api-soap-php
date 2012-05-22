@@ -15,13 +15,17 @@
 require_once ("utils.php");
 
 /**
- * Zm_Auth is a class which allows to connect to the Zimbra admin space via SOAP
+ * Zm_Auth is a class which allows to connect to the Zimbra admin or user space via SOAP
  *
  * Use this class to connect and login to a Zimbra server
  *
  * Example:
  * <code>
- * $auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword);
+ * // either authenticate as admin:
+ * $auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword, "admin");
+ * // or authenticate as user:
+ * $auth = new Zm_Auth($zimbraServer, $userEmail, $userPassword, "user");
+ * // then login
  * $l = $auth->login();
  * if(is_a($l, "Exception")) {
  *     echo "Error : cannot login to $zimbraServer\n";
@@ -43,15 +47,35 @@ class Zm_Auth
 	/**
 	 * Constructor
 	 * @param string $server server name (example: zimbra.yourdomain.com)
-	 * @param string $username admin account's username
-	 * @param string $password admin account's password
+	 * @param string $username admin/user account's username
+	 * @param string $password admin/user account's password
+	 * @param string $authas authenticate as admin or user (default admin)
 	 */
-	function __construct($server, $username, $password)
+	function __construct($server, $username, $password, $authas="admin")
 	{
+		if ($authas == "admin")
+		{
+			$location = "https://" . $server . ":7071/service/admin/soap/";
+			$uri = "urn:zimbraAdmin";
+			$params = array (
+					new SoapParam($username, "name"),
+					new SoapParam($password, "password"),
+			);
+		}
+		if ($authas == "user")
+		{
+			$location = "https://" . $server . "/service/soap/";
+			$uri = "urn:zimbraAccount";
+			$params = array (
+					new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
+					new SoapParam($password, "password"),
+			);
+		}
+
 		$this->client = new SoapClient(null,
 		    array(
-			'location' => "https://" . $server . ":7071/service/admin/soap/",
-			'uri' => "urn:zimbraAdmin",
+			'location' => $location,
+			'uri' => $uri,
 			'trace' => 1,
 			'exceptions' => 1,
 			'soap_version' => SOAP_1_2,
@@ -61,7 +85,7 @@ class Zm_Auth
 		);
 
 		$this->params = array (
-					new SoapParam($username, "name"),
+					new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
 					new SoapParam($password, "password")
 		);
 	}

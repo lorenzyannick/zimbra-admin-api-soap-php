@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>phpDocumentor » \Zm_Server</title>
+<title>phpDocumentor » \Zm_User</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -56,13 +56,12 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods</li>
 <li class="method public "><a href="#__construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
-<li class="method public "><a href="#createServer" title="createServer :: createServer"><span class="description">createServer</span><pre>createServer()</pre></a></li>
-<li class="method public "><a href="#deleteServer" title="deleteServer :: deleteServer"><span class="description">deleteServer</span><pre>deleteServer()</pre></a></li>
-<li class="method public "><a href="#getAllServers" title="getAllServers :: getAllServers"><span class="description">getAllServers</span><pre>getAllServers()</pre></a></li>
-<li class="method public "><a href="#getServerId" title="getServerId :: getServerId"><span class="description">getServerId</span><pre>getServerId()</pre></a></li>
-<li class="method public "><a href="#getServerOptions" title="getServerOptions :: getServerOptions"><span class="description">getServerOptions</span><pre>getServerOptions()</pre></a></li>
-<li class="method public "><a href="#modifyServer" title="modifyServer :: modifyServer"><span class="description">modifyServer</span><pre>modifyServer()</pre></a></li>
-<li class="method public "><a href="#serverExists" title="serverExists :: serverExists"><span class="description">serverExists</span><pre>serverExists()</pre></a></li>
+<li class="method public "><a href="#changeUserPassword" title="changeUserPassword :: changeUserPassword"><span class="description">changeUserPassword</span><pre>changeUserPassword()</pre></a></li>
+<li class="method public "><a href="#getUserAttrs" title="getUserAttrs :: getUserAttrs"><span class="description">getUserAttrs</span><pre>getUserAttrs()</pre></a></li>
+<li class="method public "><a href="#getUserInfo" title="getUserInfo :: getUserInfo"><span class="description">getUserInfo</span><pre>getUserInfo()</pre></a></li>
+<li class="method public "><a href="#getUserPrefs" title="getUserPrefs :: getUserPrefs"><span class="description">getUserPrefs</span><pre>getUserPrefs()</pre></a></li>
+<li class="method public "><a href="#modifyUserPrefs" title="modifyUserPrefs :: modifyUserPrefs"><span class="description">modifyUserPrefs</span><pre>modifyUserPrefs()</pre></a></li>
+<li class="method public "><a href="#userExists" title="userExists :: userExists"><span class="description">userExists</span><pre>userExists()</pre></a></li>
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties</li>
 <li class="nav-header private">» Private</li>
@@ -70,12 +69,12 @@
 </ul>
 </div>
 <div class="span8">
-<a name="%5CZm_Server" id="\Zm_Server"></a><div href="../classes/Zm_Server.html" class="element class">
-<p class="short_description">Zm_Server is a class which allows to manage Zimbra servers via SOAP</p>
+<a name="%5CZm_User" id="\Zm_User"></a><div href="../classes/Zm_User.html" class="element class">
+<p class="short_description">Zm_User is a class which allows a Zimbra user to manage its own account via SOAP</p>
 <div class="details">
-<p class="long_description"><p>You may create, modify, rename, delete and get the attributes of a Zimbra server using this class</p>
+<p class="long_description"><p>You may change password, modify and get the preferences of a Zimbra user using this class</p>
 
-<p>For the usage examples of all class methods check the source code of test.php</p></p>
+<p>For the usage examples of all class methods check the source code of testuser.php</p></p>
 <h3>
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
@@ -90,123 +89,100 @@
 <code><a href="../classes/Zm_Auth.html">\Zm_Auth</a></code><p>soap authentication</p></div>
 </div></div>
 </div>
-<a name="createServer" id="createServer"></a><div class="element clickable method public createServer" data-toggle="collapse" data-target=".createServer .collapse">
-<h2>createServer</h2>
-<pre>createServer(string $name, array $attrs) : array</pre>
+<a name="changeUserPassword" id="changeUserPassword"></a><div class="element clickable method public changeUserPassword" data-toggle="collapse" data-target=".changeUserPassword .collapse">
+<h2>changeUserPassword</h2>
+<pre>changeUserPassword(string $userName, string $oldPassword, string $newPassword) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>a server name</p></div>
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
 <div class="subelement argument">
-<h4>$attrs</h4>
-<code>array</code><p>an optional array containing the server attributes to be set</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>an array with the new server's info</div>
-</div></div>
-</div>
-<a name="deleteServer" id="deleteServer"></a><div class="element clickable method public deleteServer" data-toggle="collapse" data-target=".deleteServer .collapse">
-<h2>deleteServer</h2>
-<pre>deleteServer(string $idOrNameServer, string $type) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="span8">
-<p class="long_description"></p>
-<h3>Parameters</h3>
+<h4>$oldPassword</h4>
+<code>string</code><p>old password</p></div>
 <div class="subelement argument">
-<h4>$idOrNameServer</h4>
-<code>string</code><p>server id or server name</p></div>
-<div class="subelement argument">
-<h4>$type</h4>
-<code>string</code><p>value of the server (auto, name, id)</p>
-</div>
+<h4>$newPassword</h4>
+<code>string</code><p>new password</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>array</code>informations</div>
 </div></div>
 </div>
-<a name="getAllServers" id="getAllServers"></a><div class="element clickable method public getAllServers" data-toggle="collapse" data-target=".getAllServers .collapse">
-<h2>getAllServers</h2>
-<pre>getAllServers() : array</pre>
+<a name="getUserAttrs" id="getUserAttrs"></a><div class="element clickable method public getUserAttrs" data-toggle="collapse" data-target=".getUserAttrs .collapse">
+<h2>getUserAttrs</h2>
+<pre>getUserAttrs(string $userName) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>attributes</div>
+</div></div>
+</div>
+<a name="getUserInfo" id="getUserInfo"></a><div class="element clickable method public getUserInfo" data-toggle="collapse" data-target=".getUserInfo .collapse">
+<h2>getUserInfo</h2>
+<pre>getUserInfo(string $userName) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="span8">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>array</code>informations</div>
 </div></div>
 </div>
-<a name="getServerId" id="getServerId"></a><div class="element clickable method public getServerId" data-toggle="collapse" data-target=".getServerId .collapse">
-<h2>getServerId</h2>
-<pre>getServerId(string $name) : string</pre>
+<a name="getUserPrefs" id="getUserPrefs"></a><div class="element clickable method public getUserPrefs" data-toggle="collapse" data-target=".getUserPrefs .collapse">
+<h2>getUserPrefs</h2>
+<pre>getUserPrefs(string $userName) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>a server name</p></div>
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code>string</code>a server id</div>
+<code>array</code>prefs</div>
 </div></div>
 </div>
-<a name="getServerOptions" id="getServerOptions"></a><div class="element clickable method public getServerOptions" data-toggle="collapse" data-target=".getServerOptions .collapse">
-<h2>getServerOptions</h2>
-<pre>getServerOptions(string $idOrNameServer, string $type) : array</pre>
+<a name="modifyUserPrefs" id="modifyUserPrefs"></a><div class="element clickable method public modifyUserPrefs" data-toggle="collapse" data-target=".modifyUserPrefs .collapse">
+<h2>modifyUserPrefs</h2>
+<pre>modifyUserPrefs(string $userName, array $prefs) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$idOrNameServer</h4>
-<code>string</code><p>server id or server name</p></div>
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
 <div class="subelement argument">
-<h4>$type</h4>
-<code>string</code><p>value of the server (auto, name, id)</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response"><code>array</code></div>
-</div></div>
-</div>
-<a name="modifyServer" id="modifyServer"></a><div class="element clickable method public modifyServer" data-toggle="collapse" data-target=".modifyServer .collapse">
-<h2>modifyServer</h2>
-<pre>modifyServer(string $idOrNameServer, array $attrs, string $type) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="span8">
-<p class="long_description"></p>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$idOrNameServer</h4>
-<code>string</code><p>server id or server name</p></div>
-<div class="subelement argument">
-<h4>$attrs</h4>
-<code>array</code><p>an array containing the server attributes to be set</p></div>
-<div class="subelement argument">
-<h4>$type</h4>
-<code>string</code><p>value of the server (auto, name, id)</p>
-</div>
+<h4>$prefs</h4>
+<code>array</code><p>an array containing the user prefs to be set</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>array</code>informations</div>
 </div></div>
 </div>
-<a name="serverExists" id="serverExists"></a><div class="element clickable method public serverExists" data-toggle="collapse" data-target=".serverExists .collapse">
-<h2>serverExists</h2>
-<pre>serverExists(string $idOrNameServer, string $type) : bool</pre>
+<a name="userExists" id="userExists"></a><div class="element clickable method public userExists" data-toggle="collapse" data-target=".userExists .collapse">
+<h2>userExists</h2>
+<pre>userExists(string $userName) : bool</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$idOrNameServer</h4>
-<code>string</code><p>server id or server name</p></div>
-<div class="subelement argument">
-<h4>$type</h4>
-<code>string</code><p>value of the server (auto, name, id)</p>
-</div>
+<h4>$userName</h4>
+<code>string</code><p>user name</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>bool</code>exists</div>

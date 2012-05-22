@@ -139,14 +139,18 @@ function print_var($var, $titre = "")
 		$nl = "<br/>";
 		$pre1 = "<pre>";
 		$pre2 = "</pre>";
-		$sep = "<hr>";
-		$title = "<h1>".$titre."</h1>";
+		if ($titre) {
+			$sep = "<hr>";
+			$title = "<h1>".$titre."</h1>";
+		}
 	} else {
 		$nl = "\n";
 		$pre1 = $nl.$nl;
 		$pre2 = $nl.$nl;
-		$sep = str_repeat("-", 80).$nl;
-		$title = "\033[1m"."--- ".$titre." ---"."\033[0m";
+		if ($titre) {
+			$sep = str_repeat("-", 80).$nl;
+			$title = "\033[1m"."--- ".$titre." ---"."\033[0m";
+		}
 	}
 
 	echo $title;

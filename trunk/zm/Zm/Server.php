@@ -71,7 +71,7 @@ class Zm_Server
 		$result = null;
 
 		$params = array(
-			new SoapVar('<server by="name">' . $name . '</server>', XSD_ANYXML)
+			new SoapVar('<server by="name">' . $name . '</server>', XSD_ANYXML),
 		);
 
 		try
@@ -107,7 +107,7 @@ class Zm_Server
 		$result = null;
 
 		$params = array(
-			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML)
+			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML),
 		);
 
 		try
@@ -141,7 +141,7 @@ class Zm_Server
 		$result = null;
 
 		$params = array(
-			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML)
+			new SoapVar('<server by="' . $realType . '">' . $idOrNameServer . '</server>', XSD_ANYXML),
 		);
 
 		try
@@ -168,15 +168,15 @@ class Zm_Server
 	/**
 	 * createServer
 	 * @param string $name a server name
-	 * @param array $attrs an optional array to set server options
-	 * @return array an array with the informations of the created server
+	 * @param array $attrs an optional array containing the server attributes to be set
+	 * @return array an array with the new server's info
 	 */
 	function createServer($name, $attrs = array ())
 	{
 		$result = null;
 
 		$params = array(
-			new SoapParam($name, "name")
+			new SoapParam($name, "name"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
@@ -202,7 +202,7 @@ class Zm_Server
 	/**
 	 * modifyServer
 	 * @param string $idOrNameServer server id or server name
-	 * @param array $attrs an array to set server options
+	 * @param array $attrs an array containing the server attributes to be set
 	 * @param string $type value of the server (auto, name, id)
 	 * @return array informations
 	 */
@@ -221,7 +221,7 @@ class Zm_Server
 		$result = null;
 
 		$params = array(
-			new SoapParam($serverId, "id")
+			new SoapParam($serverId, "id"),
 		);
 		foreach ($attrs as $key=>$value)
 			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);

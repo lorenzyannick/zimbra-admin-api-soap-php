@@ -76,13 +76,17 @@
 </div>
 <div class="span8">
 <a name="%5CZm_Auth" id="\Zm_Auth"></a><div href="../classes/Zm_Auth.html" class="element class">
-<p class="short_description">Zm_Auth is a class which allows to connect to the Zimbra admin space via SOAP</p>
+<p class="short_description">Zm_Auth is a class which allows to connect to the Zimbra admin or user space via SOAP</p>
 <div class="details">
 <p class="long_description"><p>Use this class to connect and login to a Zimbra server</p>
 
 <p>Example:</p>
 
-<pre><code>$auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword);
+<pre><code>// either authenticate as admin:
+$auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword, "admin");
+// or authenticate as user:
+$auth = new Zm_Auth($zimbraServer, $userEmail, $userPassword, "user");
+// then login
 $l = $auth->login();
 if(is_a($l, "Exception")) {
     echo "Error : cannot login to $zimbraServer\n";
@@ -94,7 +98,7 @@ if(is_a($l, "Exception")) {
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
 <h2>Constructor</h2>
-<pre>__construct(string $server, string $username, string $password) </pre>
+<pre>__construct(string $server, string $username, string $password, string $authas) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="span8">
 <p class="long_description"></p>
@@ -105,11 +109,15 @@ if(is_a($l, "Exception")) {
 </div>
 <div class="subelement argument">
 <h4>$username</h4>
-<code>string</code><p>admin account's username</p>
+<code>string</code><p>admin/user account's username</p>
 </div>
 <div class="subelement argument">
 <h4>$password</h4>
-<code>string</code><p>admin account's password</p>
+<code>string</code><p>admin/user account's password</p>
+</div>
+<div class="subelement argument">
+<h4>$authas</h4>
+<code>string</code><p>authenticate as admin or user (default admin)</p>
 </div>
 </div></div>
 </div>
@@ -202,7 +210,7 @@ if(is_a($l, "Exception")) {
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a2</a> and<br>
-            generated on 2012-05-14T23:48:09+02:00.<br></footer></div>
+            generated on 2012-05-22T18:43:56+02:00.<br></footer></div>
 </div>
 </body>
 </html>
