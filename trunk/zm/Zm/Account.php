@@ -568,7 +568,7 @@ class Zm_Account
 		$hideInGAL = ($status == "active") ? "FALSE" : "TRUE";
 		$attrs = array(
 			"zimbraAccountStatus"=>$status,
-			"zimbraHideInGal"=>$hideInGAL
+			"zimbraHideInGal"=>$hideInGAL,
 		);
 
 		$result = $this->modifyAccount($idOrNameAccount, $attrs, $type);
