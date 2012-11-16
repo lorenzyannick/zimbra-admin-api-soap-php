@@ -74,13 +74,13 @@ class Zm_Auth
 
 		$this->client = new SoapClient(null,
 		    array(
-			'location' => $location,
-			'uri' => $uri,
-			'trace' => 1,
-			'exceptions' => 1,
-			'soap_version' => SOAP_1_2,
-			'style' => SOAP_RPC,
-			'use' => SOAP_LITERAL
+				'location' => $location,
+				'uri' => $uri,
+				'trace' => 1,
+				'exceptions' => 1,
+				'soap_version' => SOAP_1_2,
+				'style' => SOAP_RPC,
+				'use' => SOAP_LITERAL,
 		    )
 		);
 
