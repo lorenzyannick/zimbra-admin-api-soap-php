@@ -1,7 +1,7 @@
 <?php
 
-define(ATTR_SINGLEVALUE, 1);
-define(ATTR_MULTIVALUE, 2);
+define('ATTR_SINGLEVALUE', 1);
+define('ATTR_MULTIVALUE', 2);
 
 /////////
 // XML //
