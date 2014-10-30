@@ -5,10 +5,13 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
+ * @example ../test.php
+ */
+/**
+ * Zm_Server class documentation
  */
 
 // utils.php contains a small collection of useful functions

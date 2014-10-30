@@ -4,14 +4,13 @@
  * test.php
  *
  * In this file there are all the usage examples useful to learn and test all the
- * class methods for the Zm_Account, Zm_Server, Zm_Domain and Zm_Auth classes
+ * class methods for Zm_Account, Zm_Server, Zm_Domain and Zm_Auth
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
  * @name test.php
  * @filesource
  */
@@ -51,7 +50,7 @@ else
 
 if(isset($args["str"]))
 {
-	$account_name = "test_soap_" . $args["str"]. "@" . $domain;
+	$account_name = $args["str"]. "@" . $domain;
 	$domain_name = "domainsoap" . $args["str"] . ".com";
 	$server_name = "serversoap." . $domain_name;
 }
@@ -91,14 +90,52 @@ $accountManager = new Zm_Account($auth);
 // Get All Accounts
 if($action == "gaa")
 {
+	// warning: this may take a long time to complete and fail
+	// if you have a lot of accounts on your server
 	$r = $accountManager->getAllAccounts($domain);
 
 	if(is_a($r, "Exception")) {
-		echo "Error : cannot fetch the list of accounts for domain $domain_name :-(\n";
+		echo "Error : cannot fetch the list of accounts for domain $domain :-(\n";
 		print_exception($r);
 	} else {
 		//print_var($r, "Get All Accounts");
-		echo "OK : got the list of accounts for domain $domain_name :-)\n";
+		echo "OK : got a list of ".count($r)." accounts for domain $domain :-)\n";
+	}
+}
+
+// Fetch Accounts via LDAP
+if($action == "gafl")
+{
+	// you may fetch any attribute, just specify them in this array
+	$accountAttrs = array(
+		'zimbraId',
+		'zimbraMailDeliveryAddress',
+		'zimbraAccountStatus',
+		'sn',
+		'givenName',
+		'zimbraHideInGal',
+		'mail',
+		'zimbraCalResType',
+		'zimbraMailQuota',
+		'zimbraCreateTimestamp',
+		'zimbraIsAdminAccount',
+		'zimbraIsSystemResource',
+	);
+	// you may fetch one or more accounts using the appropriate LDAP filters
+	// for more info check SearchDirectoryRequest in
+	// https://people.mozilla.org/~justdave/zmsoapdocs/soap-admin.txt
+	// try a search by e-mail or other attributes
+	//    using "wilcard expressions" like '*', 'za*@my-domain' etc...
+	$searchValue = $args["str"]. "*@" . $domain;
+	$ldapFilter = sprintf("|(zimbraMailDeliveryAddress=%s)(zimbraMailAlias=%s)", $searchValue, $searchValue);
+	$r = $accountManager->fetchAccounts($ldapFilter, $accountAttrs);
+
+	if(is_a($r, "Exception")) {
+		echo "Error : cannot fetch the list of accounts via ldap for domain $domain :-(\n";
+		print_exception($r);
+	} else {
+		print_var($r, "Get All Accounts");
+		echo "OK : got a list of ".count($r)." accounts via ldap for domain $domain :-)\n";
 	}
 }
 
@@ -106,7 +143,7 @@ if($action == "gaa")
 if($action == "ca")
 {
 	$attrs = array("sn"=>"John", "gn"=>"Doe", "l"=>"Metropolis");
-	$r = $accountManager->createAccount($account_name, "password", $attrs);
+	$r = $accountManager->createAccount($account_name, "aPassword42", $attrs);
 
 	if(is_a($r, "Exception")) {
 		echo "Error : account $account_name not created :-(\n";
@@ -178,7 +215,7 @@ if($action == "gao")
 // Set Account password
 if($action == "sap")
 {
-	$r = $accountManager->setAccountPassword($account_name, "newpassword");
+	$r = $accountManager->setAccountPassword($account_name, "anewPassword42");
 
 	if(is_a($r, "Exception")) {
 		echo "Error : cannot change password for account $account_name :-(\n";

@@ -5,10 +5,13 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
+ * @example "../testuser.php"
+ */
+/**
+ * Zm_User class documentation
  */
 
 // utils.php contains a small collection of useful functions
@@ -17,9 +20,9 @@ require_once ("utils.php");
 /**
  * Zm_User is a class which allows a Zimbra user to manage its own account via SOAP
  *
- * You may change password, modify and get the preferences of a Zimbra user using this class
+ * You may change password, modify and get the attributes of a Zimbra user using this class
  *
- * For the usage examples of all class methods check the source code of testuser.php
+ * For the usage examples of all class methods check the source code of test.php
  */
 class Zm_User
 {
@@ -51,12 +54,16 @@ class Zm_User
 		$params = array(
 			new SoapVar('<account by="name">' . $userName . '</account>', XSD_ANYXML),
 		);
+		$options = array(
+			'retry' => false,
+		);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
 				"GetAccountInfoRequest",
-				$params
+				$params,
+				$options
 			);
 		}
 		catch (SoapFault $exception)
@@ -98,7 +105,7 @@ class Zm_User
 	/**
 	 * getUserAttrs
 	 * @param string $userName user name
-	 * @return array attributes
+	 * @return string option
 	 */
 	function getUserAttrs($userName)
 	{

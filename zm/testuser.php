@@ -4,14 +4,13 @@
  * testuser.php
  *
  * In this file there are all the usage examples useful to learn and test all the
- * class methods for the Zm_User class
+ * class methods for Zm_User
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
  * @name test.php
  * @filesource
  */
@@ -49,16 +48,7 @@ else
 
 if(isset($args["str"]))
 {
-	$user_name = "test_soap_" . $args["str"]. "@" . $domain;
-	$domain_name = "domainsoap" . $args["str"] . ".com";
-	$server_name = "serversoap." . $domain_name;
-}
-else
-{
-	$rand = rand(111111, 999999999);
-	$user_name = "acct_" . $rand . "@" . $domain;
-	$domain_name = "dom" . $rand . ".com";
-	$server_name = "srv" . $rand . "." . $domain_name;
+	$user_name = $args["str"]. "@" . $domain;
 }
 
 if(isset($args["onam"]))
@@ -71,7 +61,7 @@ if(isset($args["oval"]))
 // Login //
 ///////////
 
-$userpassword = "password";
+$userpassword = "Password42";
 $auth = new Zm_Auth($zimbraserver, $user_name, $userpassword, "user");
 $l = $auth->login();
 if(is_a($l, "Exception")) {
@@ -148,7 +138,7 @@ if($action == "gua")
 // Change User password
 if($action == "cup")
 {
-  	$r = $userManager->changeUserPassword($user_name, $userpassword, "newpassword");
+  	$r = $userManager->changeUserPassword($user_name, $userpassword, "newPassword42");
 
 	if(is_a($r, "Exception")) {
 		echo "Error : cannot change password for user $user_name :-(\n";
