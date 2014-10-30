@@ -239,7 +239,6 @@ function isDomainId($str)
 		return false;
 }
 
-
 function isDomainName($str)
 {
 	$syntaxe = '#([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9}#';
@@ -248,8 +247,6 @@ function isDomainName($str)
 	else
 		return false;
 }
-
-
 
 function getDomainType($str)
 {

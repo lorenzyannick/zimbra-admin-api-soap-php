@@ -5,10 +5,13 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
+ * @example ../test.php
+ */
+/**
+ * Zm_Account class documentation
  */
 
 // utils.php contains a small collection of useful functions
@@ -41,9 +44,12 @@ class Zm_Account
 
 	/**
 	 * getAllAccounts
+	 * @deprecated it may take a long time to complete and fail on servers with lots of accounts
+	 *
+	 * use fetchAccounts instead
 	 * @param string $idOrNameDomain domain id or domain name
 	 * @param string $type value of the domain (auto, name, id)
-	 * @return array informations
+	 * @return array informations for all accounts
 	 */
 	function getAllAccounts($idOrNameDomain, $type="auto")
 	{
@@ -66,6 +72,59 @@ class Zm_Account
 			);
 
 			$result = $result['SOAP:ENVELOPE']['SOAP:BODY']['GETALLACCOUNTSRESPONSE']['ACCOUNT'];
+		}
+		catch (SoapFault $exception)
+		{
+			$result = $exception;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * fetchAccounts
+	 * @param string $ldapQuery LDAP-style filter string (RFC 2254)
+	 * @param array  $attrList names of requested attributes
+	 * @param string $nameDomain domain name to restrict search request
+	 * @return array informations for accounts as specified in $ldapQuery
+ 	 * @author Marc Lamouche <marc.lamouche@ined.fr>
+	 */
+	function fetchAccounts($ldapQuery, $attrList, $nameDomain = null)
+	{
+		$result = null;
+
+		$params = array(
+			new SoapVar('<query>'.$ldapQuery.'</query>', XSD_ANYXML),
+			new SoapParam("accounts", "types"),
+			new SoapParam(implode(',', $attrList), "attrs"),
+			new SoapParam("0", "limit"),
+		);
+		if ( is_string($nameDomain) ) $params[] = new SoapParam($nameDomain, "domain");
+
+		try
+		{
+			$response = $this->auth->execSoapCall(
+				"SearchDirectoryRequest",
+				$params
+			);
+
+			$result = array();
+
+			$resultCount = intval($response['SOAP:ENVELOPE']['SOAP:BODY']['SEARCHDIRECTORYRESPONSE']['SEARCHTOTAL']);
+			if ( !$resultCount ) return $result;
+			if ( $resultCount > 1 )
+				$accountList = &$response['SOAP:ENVELOPE']['SOAP:BODY']['SEARCHDIRECTORYRESPONSE']['ACCOUNT'];
+			else
+				$accountList = array(&$response['SOAP:ENVELOPE']['SOAP:BODY']['SEARCHDIRECTORYRESPONSE']['ACCOUNT']);
+
+			foreach($accountList as $account)
+			{
+				$data = array();
+				foreach($attrList as $attrName)
+					$data[$attrName] = getSoapAttribute($account['A'], $attrName, ATTR_MULTIVALUE);
+				$result[] = $data;
+				unset($data);
+			}
 		}
 		catch (SoapFault $exception)
 		{
@@ -123,12 +182,16 @@ class Zm_Account
 		$params = array(
 			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
 		);
+		$options = array(
+			'retry' => false,
+		);
 
 		try
 		{
 			$result = $this->auth->execSoapCall(
 				"GetAccountInfoRequest",
-				$params
+				$params,
+				$options
 			);
 		}
 		catch (SoapFault $exception)

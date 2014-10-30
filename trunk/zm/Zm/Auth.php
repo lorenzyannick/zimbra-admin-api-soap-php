@@ -5,10 +5,12 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.0
+ * @version 2.1
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
- * @package ZimbraSoapPhp
+ */
+/**
+ * Zm_Auth class documentation
  */
 
 // utils.php contains a small collection of useful functions
@@ -20,29 +22,45 @@ require_once ("utils.php");
  * Use this class to connect and login to a Zimbra server
  *
  * Example:
- * <code>
- * // either authenticate as admin:
- * $auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword, "admin");
- * // or authenticate as user:
- * $auth = new Zm_Auth($zimbraServer, $userEmail, $userPassword, "user");
- * // then login
- * $l = $auth->login();
- * if(is_a($l, "Exception")) {
- *     echo "Error : cannot login to $zimbraServer\n";
- *     echo $l->getMessage()."\n";
- *     exit();
- * }
- * </code>
+ *
+ * 	// either authenticate as admin:
+ *
+ * 	$auth = new Zm_Auth($zimbraServer, $zimbraAdminEmail, $zimbraAdminPassword, "admin");
+ *
+ * 	// or authenticate as user:
+ *
+ * 	$auth = new Zm_Auth($zimbraServer, $userEmail, $userPassword, "user");
+ *
+ * 	// then login
+ *
+ * 	$l = $auth->login();
+ *
+ * 	if(is_a($l, "Exception")) {
+ *
+ *     	echo "Error : cannot login to $zimbraServer\n";
+ *
+ *     	echo $l->getMessage()."\n";
+ *
+ *     	exit();
+ *
+ * 	}
+ *
  */
 class Zm_Auth
 {
 	/////////////////////
 	// Class Variables //
 	/////////////////////
+	/**
+	 * $auth
+	 * @var Zm_Auth $auth soap authentication
+	 */
 	private $client;
 	private $soapHeader;
 	private $params;
 	private $authToken;
+	private $context;
+	private $retryAttempts;
 
 	/**
 	 * Constructor
@@ -50,27 +68,22 @@ class Zm_Auth
 	 * @param string $username admin/user account's username
 	 * @param string $password admin/user account's password
 	 * @param string $authas authenticate as admin or user (default admin)
+	 * @param int $attempts how many times we retry to invoke a soapCall (default 3)
 	 */
-	function __construct($server, $username, $password, $authas="admin")
+	function __construct($server, $username, $password, $authas="admin", $attempts=3)
 	{
 		if ($authas == "admin")
 		{
 			$location = "https://" . $server . ":7071/service/admin/soap/";
 			$uri = "urn:zimbraAdmin";
-			$params = array (
-					new SoapParam($username, "name"),
-					new SoapParam($password, "password"),
-			);
 		}
 		if ($authas == "user")
 		{
 			$location = "https://" . $server . "/service/soap/";
 			$uri = "urn:zimbraAccount";
-			$params = array (
-					new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
-					new SoapParam($password, "password"),
-			);
 		}
+
+		$this->context = $authas;
 
 		$this->client = new SoapClient(null,
 		    array(
@@ -85,49 +98,83 @@ class Zm_Auth
 		);
 
 		$this->params = array (
-					new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
-					new SoapParam($password, "password")
+				new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
+				new SoapParam($password, "password")
 		);
+
+		$this->retryAttempts = $attempts;
 	}
 
 
+	/**
+	 * @internal
+	 */
 	function execSoapCall($request, $params = array(), $options = null)
 	{
 		$result = null;
 		$soapHeader = $this->getSoapHeader();
+		if ($options["retry"] === false)
+			$retry = false;
+		else
+			$retry = true;
+		unset($options["retry"]);
 
-		try
+		$n = 0;
+		while (true)
 		{
-			$soapRes = null;
-			$this->client->__soapCall(
-					$request,
-					$params,
-					$options,
-					$soapHeader
-			);
-			$soapRes = $this->client->__getLastResponse();
-			//$this->auth->setSoapHeader($soapRes['authToken']);
+			try
+			{
+				$soapRes = null;
+				$this->client->__soapCall(
+						$request,
+						$params,
+						$options,
+						$soapHeader
+				);
+				$soapRes = $this->client->__getLastResponse();
+				//$this->auth->setSoapHeader($soapRes['authToken']);
 
-			$xml = new xml2Array();
-			$result = $xml->parse($soapRes);
+				$xml = new xml2Array();
+				$result = $xml->parse($soapRes);
 
-			//echo htmlentities($result);
-			//A tester : $this->objLastResponse = simplexml_load_string($this->_getBodyContent($this->objLastResponseRaw));
-		}
-		catch (SoapFault $exception)
-		{
-			// we must re-throw the exception here because this method is only called by the Zm_Account, Zm_Domain, Zm_Server class methods
-			throw($exception);
+				//echo htmlentities($result);
+				//A tester : $this->objLastResponse = simplexml_load_string($this->_getBodyContent($this->objLastResponseRaw));
+				break;
+			}
+			catch (SoapFault $exception)
+			{
+				// if $retryAttempts>0 retry after a random time using exponential backoff
+				// if 'retry' option is false (usually when checking account existence) retries just once
+				$n++;
+				if ($this->retryAttempts > 0 &&
+					$n <= $this->retryAttempts && ($retry || $n == 1) ) {
+					$minT = 1+$n*1000000/10;
+					$maxT = pow(2, $n-1)*1000000;
+					$waitT = rand($minT, $maxT);
+					usleep($waitT);
+				} else {
+					// we must re-throw the exception here because this method is only called by the
+					// Zm_Account, Zm_Domain, Zm_Server class methods with their own try ... catch
+					throw($exception);
+					break;
+				}
+			}
 		}
 
 		return $result;
 	}
 
+	/**
+	 * @internal
+	 */
 	function getSoapHeader()
 	{
 		return $this->soapHeader;
 	}
 
+	/**
+	 * @internal
+	 */
 	function setSoapHeader($authToken = null)
 	{
 		if(!$authToken)
@@ -146,32 +193,79 @@ class Zm_Auth
 		}
 	}
 
+	/**
+	 * @internal
+	 */
 	function getClient()
 	{
 		return $this->client;
 	}
 
 	/**
+	 * getRetryAttempts
+	 * @return int attempts how many times we retry to invoke a soapCall
+	 */
+	function getRetryAttempts()
+	{
+		return $this->retryAttempts;
+	}
+
+	/**
+	 * setRetryAttempts
+	 * @param int $attempts how many times we retry to invoke a soapCall
+	   the wait time between attempts is progressively increased using an exponential backoff algorithm
+	 */
+	function setRetryAttempts($attempts)
+	{
+		if (!$attempts)
+			$attempts = 0;
+		$this->retryAttempts = $attempts;
+	}
+
+	/**
+	 * login
+	 *
 	 * Use this method to login to a Zimbra server after you create an instance of this class
+	 *
+	 * Login parameters must be specified when calling the constructor
 	 */
 	function login()
 	{
 		$result = null;
 
-		try
+		$n = 0;
+		while (true)
 		{
-			$this->setSoapHeader();
+			try
+			{
+				$this->setSoapHeader();
 
-			$result = $this->client->__soapCall("AuthRequest", $this->params, null, $this->getSoapHeader());
-			//$result = $this->client->__getLastResponse();
-			//print_var($result);
+				$result = $this->client->__soapCall("AuthRequest", $this->params, null, $this->getSoapHeader());
+				//$result = $this->client->__getLastResponse();
+				//print_var($result);
 
-			// Save the soapHeader with token
-			$this->setSoapHeader($result['authToken']);
-		}
-		catch (SoapFault $exception)
-		{
-			$result = $exception;
+				// Save the soapHeader with token
+				$this->setSoapHeader($result['authToken']);
+				break;
+			}
+			catch (SoapFault $exception)
+			{
+				// if $retryAttempts>0 retry after a random time using exponential backoff
+				// for user logins retries just once
+				$n++;
+				if ($this->retryAttempts > 0 &&
+					$n <= $this->retryAttempts && ($this->context == "admin" || $n == 1) ) {
+					$minT = 1+$n*1000000/10;
+					$maxT = pow(2, $n-1)*1000000;
+					$waitT = rand($minT, $maxT);
+					// wait times are shorter on login
+					$waitT = $waitT/5;
+					usleep($waitT);
+				} else {
+					$result = $exception;
+					break;
+				}
+			}
 		}
 
 		return $result;
