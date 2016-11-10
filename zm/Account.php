@@ -640,6 +640,25 @@ class Zm_Account
 	}
 
 	/**
+	 * expireAccountSessions
+	 * @param string $idOrNameAccount account id or account name
+	 * @param string $type value of the account (auto, name, id)
+	 * @return array informations
+	 */
+	function expireAccountSessions($idOrNameAccount, $type = "auto")
+	{
+		$attrName = "zimbraAuthTokenValidityValue";
+		$oldValue = $this->getAccountOption($idOrNameAccount, $attrName);
+
+		$newValue = rand($oldValue+1, 1024);
+		$attrs = array($attrName=>$newValue);
+
+		$result = $this->modifyAccount($idOrNameAccount, $attrs, $type);
+
+		return $result;
+	}
+
+	/**
 	 * getAccountCos
 	 * @param string $idOrNameAccount account id or account name
 	 * @param string $returnType get the COS ID or NAME
