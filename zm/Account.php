@@ -5,7 +5,7 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.1
+ * @version 2.2
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
  * @example ../test.php
@@ -61,7 +61,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML),
+			new SoapVar('<ns1:domain by="' . $realType . '">' . $idOrNameDomain . '</ns1:domain>', XSD_ANYXML),
 		);
 
 		try
@@ -94,7 +94,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<query>'.$ldapQuery.'</query>', XSD_ANYXML),
+			new SoapVar('<ns1:query>'.$ldapQuery.'</ns1:query>', XSD_ANYXML),
 			new SoapParam("accounts", "types"),
 			new SoapParam(implode(',', $attrList), "attrs"),
 			new SoapParam("0", "limit"),
@@ -144,7 +144,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="name">' . $name . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="name">' . $name . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -180,7 +180,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="' . $realType . '">' . $idOrNameAccount . '</ns1:account>', XSD_ANYXML),
 		);
 		$options = array(
 			'retry' => false,
@@ -218,7 +218,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="' . $realType . '">' . $idOrNameAccount . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -254,7 +254,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="' . $realType . '">' . $idOrNameAccount . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -290,7 +290,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="' . $realType . '">' . $idOrNameAccount . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -330,7 +330,7 @@ class Zm_Account
 			new SoapParam($password, "password"),
 		);
 		foreach ($attrs as $key=>$value)
-			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
+			$params[] = new SoapVar('<ns1:a n="' . $key . '">' . $value . '</ns1:a>', XSD_ANYXML);
 
 		try
 		{
@@ -418,7 +418,7 @@ class Zm_Account
 			new SoapParam($accountId, "id"),
 		);
 		foreach ($attrs as $key=>$value)
-			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
+			$params[] = new SoapVar('<ns1:a n="' . $key . '">' . $value . '</ns1:a>', XSD_ANYXML);
 
 		try
 		{
@@ -680,7 +680,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="' . $realType . '">' . $idOrNameAccount . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="' . $realType . '">' . $idOrNameAccount . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -727,7 +727,7 @@ class Zm_Account
 		$result = null;
 
 		$params = array(
-			new SoapVar('<cos by="name">' . $name . '</cos>', XSD_ANYXML),
+			new SoapVar('<ns1:cos by="name">' . $name . '</ns1:cos>', XSD_ANYXML),
 		);
 
 		try

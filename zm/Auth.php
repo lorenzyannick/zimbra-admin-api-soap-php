@@ -5,7 +5,7 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.1
+ * @version 2.2
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
  */
@@ -98,7 +98,7 @@ class Zm_Auth
 		);
 
 		$this->params = array (
-				new SoapVar('<account by="name">' . $username . '</account>', XSD_ANYXML),
+				new SoapVar('<ns1:account by="name">' . $username . '</ns1:account>', XSD_ANYXML),
 				new SoapParam($password, "password")
 		);
 
@@ -187,7 +187,7 @@ class Zm_Auth
 				new SoapHeader(
 				    'urn:zimbra',
 				    'context',
-				    new SoapVar('<ns2:context><authToken>' . $authToken . '</authToken></ns2:context>', XSD_ANYXML)
+				    new SoapVar('<ns2:context><ns2:authToken>' . $authToken . '</ns2:authToken></ns2:context>', XSD_ANYXML)
 				)
 			);
 		}

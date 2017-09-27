@@ -5,7 +5,7 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.1
+ * @version 2.2
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
  * @example "../testuser.php"
@@ -52,7 +52,7 @@ class Zm_User
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="name">' . $userName . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="name">' . $userName . '</ns1:account>', XSD_ANYXML),
 		);
 		$options = array(
 			'retry' => false,
@@ -84,7 +84,7 @@ class Zm_User
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="name">' . $userName . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="name">' . $userName . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -112,7 +112,7 @@ class Zm_User
 		$result = null;
 
 		$params = array(
- 			new SoapVar('<account by="name">' . $userName . '</account>', XSD_ANYXML),
+ 			new SoapVar('<ns1:account by="name">' . $userName . '</ns1:account>', XSD_ANYXML),
 			new SoapParam("attrs", "sections"),
 		);
 
@@ -147,7 +147,7 @@ class Zm_User
 		$result = null;
 
 		$params = array(
-			new SoapVar('<account by="name">' . $userName . '</account>', XSD_ANYXML),
+			new SoapVar('<ns1:account by="name">' . $userName . '</ns1:account>', XSD_ANYXML),
 		);
 
 		try
@@ -219,7 +219,7 @@ class Zm_User
 			new SoapParam($userName, "account"),
 		);
 		foreach ($prefs as $key=>$value)
-			$params[] = new SoapVar('<pref name="' . $key . '">' . $value . '</pref>', XSD_ANYXML);
+			$params[] = new SoapVar('<ns1:pref name="' . $key . '">' . $value . '</ns1:pref>', XSD_ANYXML);
 
 		try
 		{

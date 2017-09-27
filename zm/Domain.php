@@ -5,7 +5,7 @@
  *
  * @author Yannick Lorenz <ylorenz@1g6.biz>
  * @author Fabrizio La Rosa <fabrizio.larosa@unime.it>
- * @version 2.1
+ * @version 2.2
  * @copyright Copyright (c) 2009, Yannick Lorenz
  * @copyright Copyright (c) 2012, Fabrizio La Rosa
  * @example ../test.php
@@ -74,7 +74,7 @@ class Zm_Domain
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="name">' . $name . '</domain>', XSD_ANYXML),
+			new SoapVar('<ns1:domain by="name">' . $name . '</ns1:domain>', XSD_ANYXML),
 		);
 
 		try
@@ -133,7 +133,7 @@ class Zm_Domain
 		$result = null;
 
 		$params = array(
-			new SoapVar('<domain by="' . $realType . '">' . $idOrNameDomain . '</domain>', XSD_ANYXML),
+			new SoapVar('<ns1:domain by="' . $realType . '">' . $idOrNameDomain . '</ns1:domain>', XSD_ANYXML),
 		);
 
 		try
@@ -171,7 +171,7 @@ class Zm_Domain
 			new SoapParam($name, "name"),
 		);
 		foreach ($attrs as $key=>$value)
-			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
+			$params[] = new SoapVar('<ns1:a n="' . $key . '">' . $value . '</ns1:a>', XSD_ANYXML);
 
 		try
 		{
@@ -216,7 +216,7 @@ class Zm_Domain
 			new SoapParam($domainId, "id"),
 		);
 		foreach ($attrs as $key=>$value)
-			$params[] = new SoapVar('<a n="' . $key . '">' . $value . '</a>', XSD_ANYXML);
+			$params[] = new SoapVar('<ns1:a n="' . $key . '">' . $value . '</ns1:a>', XSD_ANYXML);
 
 		try
 		{
